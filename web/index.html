@@ -33,6 +33,22 @@
 <body>
   <div role="main">
 
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="#">CinemaExplorer</a>
+          <ul class="nav">
+            <li><a href="#description" onclick='$("#help").fadeIn("slow");'>
+            	What's this?
+            </a></li>
+            <li><a href="#description" onclick='$("#about").fadeIn("slow");'>
+            	About Author
+            </a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
 
       <div class="content">
@@ -41,7 +57,51 @@
         </div>
 
         <div class="row">
-          <div id="about" class="span16">about</div>
+          <div id="about" class="span16">
+            <div>John Goodall is a Research Scientist who spends his days working on visual analytics solutions for network security, health care, and other domains. But he also really likes movies. </div>
+            <div>Contact him via Twitter <a href='https://twitter.com/#!/johnrgoodall'>@johnrgoodall</a></div>
+            <br />
+            <div><a class="btn" id="aboutCloseBtn" href="#" onclick='$("#about").fadeOut("slow");'>
+				    	Close
+				    </a></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div id="help" class="span16">
+
+            <h2>Instructions</h2>
+            <div>
+
+            </div>
+
+            <h2>Data</h2>
+            <div>The film data includes the following fields:
+              <ul>
+                <li><span class="term-name">Profitability</span> : Percent of budget recovered</li>
+                <li><span class="term-name">Budget</span> : Cost, in millions US Dollars</li>
+                <li><span class="term-name">Opening Weekend Theaters</span> : Number of Theaters in US Opening Weekend</li>
+                <li><span class="term-name">Opening Weekend Revenue</span> : Revenue, in millions US Dollars</li>
+                <li><span class="term-name">Opening Weekend per Cinema</span> : Average per cinema on opening weekend, in US Dollars</li>
+                <li><span class="term-name">Worldwide Gross</span> : Total revenue, in millions US Dollars</li>
+                <li><span class="term-name">Domestic Gross</span> : US revenue, in millions US Dollars</li>
+                <li><span class="term-name">Foreign Gross</span> : non-US revenue, in millions US Dollars</li>
+                <li><span class="term-name">Audience Rating</span> : Average audience score from <a href="http://www.rottentomatoes.com/">Rotten Tomatoes</a>, score: 1-100</li>
+                <li><span class="term-name">Critic Rating</span> : Average meta score of critical reviews from <a href="http://www.rottentomatoes.com/">Rotten Tomatoes</a>, score: 1-100 </li>
+                <li><span class="term-name">Oscar</span> : Names of Academy Award categories</li>
+                <li><span class="term-name">Studio</span> : Name of the lead studio</li>
+                <li><span class="term-name">Genre</span> : Name of the genre from <a href="www.imdb.coml">IMDB</a></li>
+                <li><span class="term-name">Story</span> : Name of the <a href="http://infobawards.s3.amazonaws.com/hollywood_plots.pdf">story type</a></li>
+              </ul>
+            </div>
+
+            <div>The <a href="http://bit.ly/hollywoodbudgets">data set</a> is from the in the <a href="http://www.informationisbeautifulawards.com/2012/01/challenge-of-the-stars/">Information is Beautiful 'Hollywood Budgets' Challenge</a>. The data was pruned to remove films marked 'exclude'. The sources for budget data is <a href="http://www.the-numbers.com/movies/records/allbudgets.php">TheNumbers.com</a> and <a href="http://www.boxofficemojo.com/">BoxOfficeMojo.com</a>.</div>
+
+            <br />
+            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#help").fadeOut("slow");'>
+				    	Close
+				    </a></div>
+          </div>
         </div>
 
         <div class="row">
@@ -63,19 +123,19 @@
                   <span id="detail-profitability-value"></span>
                 </div>
                 <div class="span5">
-                  <span class="detail-name">Budget ($ millions)</span>
+                  <span class="detail-name">Budget</span>
                   <span id="detail-budget-value" class="detail-value"></span>
                 </div>
               </div>
 
               <div class="row">
-                <div class="span4"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Theaters</span>
+                <div class="span4"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</span>
                 <span id="detail-theatres-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Worldwide Gross ($ millions)</span>
+                <div class="span4"><span class="detail-name">Worldwide Gross</span>
                 <span id="detail-worldwide-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Audience Score (%)</span>
+                <div class="span4"><span class="detail-name">Audience Rating</span>
                 <span id="detail-audience-value" class="detail-value"></span>
                 </div>
                 <div class="span4"><span class="detail-name">Genre</span>
@@ -84,13 +144,13 @@
               </div>
 
               <div class="row">
-                <div class="span4"><span class="detail-name">Opening Weekend ($ millions)</span>
+                <div class="span4"><span class="detail-name">Opening Weekend Revenue</span>
                 <span id="detail-openingweekend-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Domestic Gross ($ millions)</span>
+                <div class="span4"><span class="detail-name">Domestic Gross</span>
                 <span id="detail-domestic-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Rotten Tomatoes (%)</span>
+                <div class="span4"><span class="detail-name">Critic Rating</span>
                 <span id="detail-rotten-value" class="detail-value"></span>
                 </div>
                 <div class="span4"><span class="detail-name">Story</span>
@@ -99,16 +159,16 @@
               </div>
 
               <div class="row">
-                <div class="span4"><span class="detail-name">Average per Cinema on Opening Weekend ($ millions)</span>
+                <div class="span4"><span class="detail-name">Opening Weekend per Cinema</span>
                 <span id="detail-avgcinema-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Foreign Gross ($ millions)</span>
+                <div class="span4"><span class="detail-name">Foreign Gross</span>
                 <span id="detail-foreign-value" class="detail-value"></span>
                 </div>
                 <div class="span4"><span class="detail-name">Oscar</span>
                 <span id="detail-oscar-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Lead Studio</span>
+                <div class="span4"><span class="detail-name">Studio</span>
                 <span id="detail-studio-value" class="detail-value"></span>
                 </div>
               </div>

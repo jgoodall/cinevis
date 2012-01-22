@@ -1,11 +1,11 @@
 html, body {
   background-color: #eee;
 }
-/*
+
 body {
   padding-top: 40px;
 }
-*/
+
 .container > footer p {
   text-align: center; /* center align it with the container */
 }
@@ -33,9 +33,29 @@ body {
 /*
 Visualizations
 */
+
+#help, #about {
+  margin-bottom: 15px;
+  padding: 20px;
+}
+
+#help {
+  background: #fdf6e3;
+}
+
+#about {
+  display: none;
+}
+
+.term-name {
+  color: #666;
+  font-weight: 600;
+}
+
 #vis, #filters {
   height: 700px;
 }
+
 
 #details-container {
   height: 100px;
