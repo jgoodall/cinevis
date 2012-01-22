@@ -63,15 +63,6 @@ d3.json('/data/moviedata.json', function(data) {
     .append('g')
       .attr('transform', 'translate(' + (axisPadding - padding) + ',' + padding + ')');
 
-  var plot = svg.selectAll('circle')
-    .data(data)
-      .enter()
-    .append('circle')
-      .attr('class', 'point')
-      .attr('cx', function(d) { return locate(d, 'x'); } )
-      .attr('cy', function(d) { return locate(d, 'y'); } )
-      .attr('r', 5);
-
   svg.append('g')
       .attr('class', 'x axis')
        .attr('transform', 'translate(0,' + (h-axisPadding) + ')')
@@ -81,4 +72,47 @@ d3.json('/data/moviedata.json', function(data) {
       .attr('transform', 'translate(0,0)')
       .call(yAxis);
 
+  var plot = svg.selectAll('circle')
+    .data(data)
+      .enter()
+    .append('circle')
+      .attr('class', 'point')
+      .attr('cx', function(d) { return locate(d, 'x'); } )
+      .attr('cy', function(d) { return locate(d, 'y'); } )
+      .attr('r', 5)
+      .on('mouseover', mouseover)
+      .on('mouseout', mouseout);
+
 });
+
+function mouseover(d, i) {
+  $('#details').css('display', 'inline');
+  $('#detail-film-value').html(d.Film);
+  $('#detail-year-value').html(d.Year);
+  $('#detail-profitability-value').html(d['Profitability']);
+  $('#detail-budget-value').html(d['Budget']);
+  $('#detail-theatres-value').html(d['Number of Theatres in US Opening Weekend']);
+  $('#detail-worldwide-value').html(d['Worldwide Gross']);
+  $('#detail-audience-value').html(d['Audience  score %']);
+  $('#detail-genre-value').html(d['Genre']);
+  $('#detail-openingweekend-value').html(d['Opening Weekend']);
+  $('#detail-domestic-value').html(d['Domestic Gross']);
+  $('#detail-rotten-value').html(d['Rotten Tomatoes %']);
+  $('#detail-story-value').html(d['Story']);
+  $('#detail-avgcinema-value').html(d['Box Office Average per US Cinema (Opening Weekend)']);
+  $('#detail-foreign-value').html(d['Foreign Gross']);
+  $('#detail-oscar-value').html(d['Oscar']);
+  $('#detail-studio-value').html(d['Lead Studio']);
+
+  d3.select(this)
+      .attr('fill', function(d) {return '#666';})
+      .attr('stroke', 'orange');
+}
+
+function mouseout(d, i) {
+//$('#details').css('display', 'none');
+  d3.select(this)
+      .attr('fill', null)
+      .attr('stroke', null);
+}
+
