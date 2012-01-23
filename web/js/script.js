@@ -6,7 +6,6 @@
   * Fix 'average' row to bring out of regular json data file
 
 # Vis
-  * Labels on axes
   * Change axes to different data fields
   * Color by story - hard code
   * Color legend
@@ -94,12 +93,26 @@ d3.json('/data/moviedata.json', function(data) {
 
   svg.append('g')
       .attr('class', 'x axis')
-       .attr('transform', 'translate(0,' + (h-axisPadding) + ')')
+      .attr('transform', 'translate(0,' + (h-axisPadding) + ')')
       .call(xAxis);
+  svg.append('text')
+      .attr('x', w/2)
+      .attr('y', h-(axisPadding/3))
+      .attr('text-anchor', 'middle')
+      .attr('class', 'axisTitle')
+      .text(xField);
+
   svg.append('g')
       .attr('class', 'y axis')
       .attr('transform', 'translate(0,0)')
       .call(yAxis);
+  svg.append('text')
+      .attr('x', h/2)
+      .attr('y', (axisPadding/3))
+      .attr('text-anchor', 'end')
+      .attr('class', 'axisTitle')
+      .attr('transform', 'translate(-' + axisPadding + ',' + (h * 0.85) + ')rotate(-90)')
+      .text(yField);
 
   var plot = svg.selectAll('circle')
     .data(data)
@@ -113,6 +126,7 @@ d3.json('/data/moviedata.json', function(data) {
       .on('mouseout', mouseout);
 
 });
+
 
 function mouseover(d, i) {
   $('#details').css('display', 'inline');
