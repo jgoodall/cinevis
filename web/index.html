@@ -41,8 +41,11 @@
             <li><a href="#description" onclick='$("#help").slideDown(750);'>
             	What's this?
             </a></li>
+            <li><a href="#description" onclick='$("#data").slideDown(750);'>
+            	Data
+            </a></li>
             <li><a href="#description" onclick='$("#about").slideDown(750);'>
-            	About Author
+            	About the Author
             </a></li>
           </ul>
         </div>
@@ -58,9 +61,13 @@
 
         <div class="row">
           <div id="about" class="span12 offset2">
+            <a class="close" href="#" onclick='$("#about").slideUp(750);'>×</a>
+            <h2>About the Author</h2>
+
             <div>John Goodall is a Research Scientist who spends his days working on visual analytics solutions for network security, health care, and other domains. But he also really likes movies. </div>
             <div>Contact him via Twitter <a href='https://twitter.com/#!/johnrgoodall'>@johnrgoodall</a></div>
             <br />
+
             <div><a class="btn" id="aboutCloseBtn" href="#" onclick='$("#about").slideUp(750);'>
 				    	Close
 				    </a></div>
@@ -69,13 +76,25 @@
 
         <div class="row">
           <div id="help" class="span12 offset2">
+            <a class="close" href="#" onclick='$("#help").slideUp(750);'>×</a>
+            <h2>What's this?</h2>
 
-            <h2>Instructions</h2>
             <div>
               Each circle on the plot represents a film.
             </div>
+            <br />
 
+            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#help").slideUp(750);'>
+				    	Close
+				    </a></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div id="data" class="span12 offset2">
+            <a class="close" href="#" onclick='$("#data").slideUp(750);'>×</a>
             <h2>Data</h2>
+
             <div>The data includes most films from 2008-2011. The data includes the following fields:
               <ul>
                 <li><span class="term-name">Profitability</span> : Percent of budget recovered</li>
@@ -101,7 +120,7 @@
             <div>The <a href="http://bit.ly/hollywoodbudgets">data set</a> is from the in the <a href="http://www.informationisbeautifulawards.com/2012/01/challenge-of-the-stars/">Information is Beautiful 'Hollywood Budgets' Challenge</a>. The data was pruned to remove films marked 'exclude'. The sources for budget data is <a href="http://www.the-numbers.com/movies/records/allbudgets.php">TheNumbers.com</a> and <a href="http://www.boxofficemojo.com/">BoxOfficeMojo.com</a>.</div>
 
             <br />
-            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#help").slideUp(750);'>
+            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#data").slideUp(750);'>
 				    	Close
 				    </a></div>
           </div>

@@ -34,16 +34,15 @@ body {
 Visualizations
 */
 
-#help, #about {
-  margin: 5px 40px;
-  padding: 15px;
+#help, #data, #about {
+  padding: 10px;
 }
 
 #help {
   background: #fdf6e3;
 }
 
-#about {
+#data, #about {
   display: none;
 }
 
