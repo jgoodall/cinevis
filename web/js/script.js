@@ -1,9 +1,38 @@
+/*
+  TODO LIST
+
+# Data
+  * Check data - profitability uses different formulas in different years
+  * Fix 'average' row to bring out of regular json data file
+
+# Vis
+  * Labels on axes
+  * Change axes to different data fields
+  * Color by story - hard code
+  * Color legend
+  * Filter by year (bar chart)
+  * Filter by story (list)
+  * Filter by genre (list)
+  * Filter by profitability (slider)
+  * Filter by budget (slider)
+  * Filter by worldwide gross (slider)
+  * Filter by budget (slider)
+  * Filter by average rating (slider)
+  * Show only anomalies (more than 1 std dev for each axis)
+  * Color by story, genre, profitibility
+  * Click to select and show details for multiple films
+
+*/
+
+
 // by default, x = budget, y = gross
 var xField = 'Budget',
     yField = 'Worldwide Gross';
 var xDomain, yDomain,
     xScale, yScale,
     xAxis, yAxis;
+
+var numberFormat = d3.format(',.0f');
 
 // return the value for a given scale, checking if it is a number
 // d = the data item to locate, axis = 'x' or 'y'
@@ -26,8 +55,8 @@ d3.json('/data/moviedata.json', function(data) {
   var w = $('#vis').width(),
       h = $('#vis').height();
 
-  var axisPadding = 60; // for padding on the axis side
-  var padding = 15;     // for padding opposite side of axis
+  var axisPadding = 65; // for padding on the axis side
+  var padding = 10;     // for padding opposite side of axis
   var xRange = [0, w - axisPadding],
       yRange = [h - axisPadding, 0];
 
@@ -48,13 +77,13 @@ d3.json('/data/moviedata.json', function(data) {
     .orient('bottom')
     .ticks(5)
     .tickSize(-(h-axisPadding), 0, 0)
-    .tickFormat(d3.format(',.0f'));
+    .tickFormat(numberFormat);
   yAxis = d3.svg.axis()
     .orient('left')
     .scale(yScale)
     .ticks(5)
     .tickSize(-(w-axisPadding), 0, 0)
-    .tickFormat(d3.format(',.0f'));
+    .tickFormat(numberFormat);
 
   var svg = d3.select('#vis')
     .append('svg')
@@ -105,14 +134,14 @@ function mouseover(d, i) {
   $('#detail-studio-value').html(d['Lead Studio']);
 
   d3.select(this)
-      .attr('fill', function(d) {return '#666';})
-      .attr('stroke', 'orange');
+      .style('stroke-width', 2.5)
+      .style('stroke', 'orange');
 }
 
 function mouseout(d, i) {
-//$('#details').css('display', 'none');
+  $('#details').css('display', 'none');
   d3.select(this)
-      .attr('fill', null)
-      .attr('stroke', null);
+      .style('stroke-width', null)
+      .style('stroke', null);
 }
 
