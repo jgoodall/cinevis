@@ -35,8 +35,8 @@ Visualizations
 */
 
 #help, #about {
-  margin: 40px;
-  padding: 20px;
+  margin: 5px 40px;
+  padding: 15px;
 }
 
 #help {
@@ -87,6 +87,7 @@ Visualizations
 }
 
 .axisTitle {
+  cursor: default;
   stroke: none;
   fill: #555;
   font-size: 14px;
