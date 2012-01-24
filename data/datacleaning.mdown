@@ -7,12 +7,28 @@
 
 # Clean the csv files
 
-    for i in `ls *csv` ; do yr=`echo $i | cut -d'.' -f1` ; years="${yr} ${years}" ; file=$yr-clean.csv; files="${file} ${files}" ; cat $i | grep -v ^y | grep -v ^[,]+$ | csvcut -c 9,8,15,14,12,10,11,13,2,3,4,5,6,7,16,17 | csvsort -r > $file ; done ; years=`echo $years | tr ' ' ','`
+Loop through all of the csv files
+Keep track of years and file names
+Remove lines that are marked excluded (first column)
+Remove 'blank' lines (e.g. ',,,,,,')
+Remove the second header line
+
+    unset years ; unset files ; for i in `ls *csv` ; do yr=`echo $i | cut -d'.' -f1` ; years="${yr} ${years}" ; file=$yr-clean.csv; files="${file} ${files}" ; cat $i | sed '/^y/d' | sed '/^,,,,,/d' | sed '/% of budget recovered/d' | csvcut -c 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 > $file ; done ; years=`echo $years | tr ' ' ','`
+
+# Pull out averages
+
+
+
+# Concatenate all files into a single CSV
+
+Group by years
 
     csvstack -g $years -n Year $files > moviedata.csv
 
 
 # Convert to JSON
+
+Pipe through jsonlint, for development
 
     csvjson moviedata.csv | jsonlint > moviedata-orig.json
 

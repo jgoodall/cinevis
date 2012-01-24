@@ -48,7 +48,8 @@ var colorScale = $.inArray(colorField, categoricalFields) >= 0 ? categoricalColo
 
 
 // TODO - these probably shouldnt be globals
-var data;
+var data;     // the main film data structure
+var averages; // {year: {field: avg,..}, ..}
 var svg;
 
 // format functions
@@ -91,6 +92,8 @@ var colorize = function(d) {
 // load the data asynchronously
 d3.json('/data/moviedata.json', function(json) {
   data = json;
+
+
 
   var w = $('#vis').width(),
       h = $('#vis').height();
@@ -204,7 +207,7 @@ function mouseover(d, i) {
 
 // reset detail view and visual properties
 function mouseout(d, i) {
-  $('#details').css('display', 'none');
+//  $('#details').css('display', 'none'); - keep details on screen for highlighted
   d3.select(this)
       .style('stroke-width', null)
       .style('stroke', null)
