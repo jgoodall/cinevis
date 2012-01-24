@@ -1,0 +1,22 @@
+
+# Clean the csv files
+
+    for i in `ls *csv` ; do yr=`echo $i | cut -d'.' -f1` ; years="${yr} ${years}" ; file=$yr-clean.csv; files="${file} ${files}" ; cat $i | grep -v ^y | grep -v ^[,]+$ | csvcut -c 9,8,15,14,12,10,11,13,2,3,4,5,6,7,16,17 | csvsort -r > $file ; done ; years=`echo $years | tr ' ' ','`
+
+    csvstack -g $years -n Year $files > moviedata.csv
+
+
+#Convert to JSON
+
+    csvjson moviedata.csv | jsonlint > moviedata-orig.json
+
+
+# Postprocessing
+search and replace:
+ * Audience  score % --> Audience Rating
+ * Rotten Tomatoes % --> Critic Rating
+ * Number of Theatres in US Opening Weekend --> Opening Weekend Theaters
+ * Opening Weekend --> Opening Weekend Revenue
+ * Box Office Average per US Cinema (Opening Weekend) --> Opening Weekend per Cinema
+
+    cat moviedata-orig.json | sed 's/"Film "/"Film"/' | sed 's/"Audience  score %"/"Audience Rating"/' | sed 's/"Rotten Tomatoes %"/"Critic Rating"/' | sed 's/"Number of Theatres in US Opening Weekend"/"Opening Weekend Theaters"/' | sed 's/"Opening Weekend"/"Opening Weekend Revenue"/' | sed 's/"Box Office Average per US Cinema (Opening Weekend)"/"Opening Weekend per Cinema"/' > moviedata.json
