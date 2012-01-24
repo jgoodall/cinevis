@@ -1,10 +1,6 @@
 /*
   TODO LIST
 
-# Data
-  * Check data - profitability uses different formulas in different years
-  * Fix 'average' row to bring out of regular json data file
-
 # Vis
   * Change axes to different data fields
   * Color by story - hard code
@@ -22,6 +18,9 @@
   * Click to select and show details for multiple films
 
 # Bugs
+  * Fix profitability - uses different formulas in different years
+  * Fix 'average' row to bring out of regular json data file
+  * REMOVE GLOBAL VARS
   * Fix format for details to show commas, $, etc.
 
 */
@@ -32,7 +31,12 @@ var xField = 'Budget',
     yField = 'Worldwide Gross';
 var xDomain, yDomain,
     xScale, yScale,
-    xAxis, yAxis;
+    xAxis, yAxis,
+    xAxisPanel, yAxisPanel,
+    xLegend, yLegend;
+
+var data;
+var svg;
 
 var numberFormat = d3.format(',.0f');
 
@@ -53,7 +57,13 @@ var locate = function(d, axis) {
   return $.isNumeric(datum) ? scale(datum) : domain[0];
 }
 
-d3.json('/data/moviedata.json', function(data) {
+var setDomain = function(field) {
+  return [ d3.min(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }), d3.max(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }) ];
+}
+
+d3.json('/data/moviedata.json', function(json) {
+  data = json;
+
   var w = $('#vis').width(),
       h = $('#vis').height();
 
@@ -62,10 +72,8 @@ d3.json('/data/moviedata.json', function(data) {
   var xRange = [0, w - axisPadding],
       yRange = [h - axisPadding, 0];
 
-  xDomain = [ d3.min(data, function(d) { return $.isNumeric(d[xField]) ? +d[xField] : 0; }),
-              d3.max(data, function(d) { return $.isNumeric(d[xField]) ? +d[xField] : 0; }) ];
-  yDomain = [ d3.min(data, function(d) { return $.isNumeric(d[yField]) ? +d[yField] : 0; }),
-              d3.max(data, function(d) { return $.isNumeric(d[yField]) ? +d[yField] : 0; }) ];
+  xDomain = setDomain(xField, data);
+  yDomain = setDomain(yField, data);
 
   xScale = d3.scale.linear()
     .domain(xDomain)
@@ -87,18 +95,20 @@ d3.json('/data/moviedata.json', function(data) {
     .tickSize(-(w-axisPadding), 0, 0)
     .tickFormat(numberFormat);
 
-  var svg = d3.select('#vis')
+  svg = d3.select('#vis')
     .append('svg')
       .attr('width', w)
       .attr('height',h)
     .append('g')
       .attr('transform', 'translate(' + (axisPadding - padding) + ',' + padding + ')');
 
-  svg.append('g')
+  xAxisPanel = svg.append('g')
       .attr('class', 'x axis')
+      .attr('id', 'xTicks')
       .attr('transform', 'translate(0,' + (h-axisPadding) + ')')
       .call(xAxis);
-  svg.append('text')
+  xLegend = svg.append('text')
+      .attr('id', 'xLabel')
       .attr('x', w/2)
       .attr('y', h-(axisPadding/3))
       .attr('text-anchor', 'middle')
@@ -106,11 +116,13 @@ d3.json('/data/moviedata.json', function(data) {
       .text(xField);
 //      .on('click', changeAxis('x') );
 
-  svg.append('g')
+  yAxisPanel = svg.append('g')
       .attr('class', 'y axis')
+      .attr('id', 'yTicks')
       .attr('transform', 'translate(0,0)')
       .call(yAxis);
-  svg.append('text')
+  yLegend = svg.append('text')
+      .attr('id', 'yLabel')
       .attr('x', h/2)
       .attr('y', (axisPadding/3))
       .attr('text-anchor', 'end')
@@ -119,7 +131,7 @@ d3.json('/data/moviedata.json', function(data) {
       .text(yField);
 //      .on('click', changeAxis('y') );
 
-  var plot = svg.selectAll('circle')
+  svg.selectAll('circle')
     .data(data)
       .enter()
     .append('circle')
@@ -171,13 +183,33 @@ $( function() {
 
   $('#xaxis').change(function() {
     xField = $('#xaxis').val();
-    console.log(xField);
+    xDomain = setDomain(xField);
+    xScale.domain(xDomain);
+    xAxis.scale(xScale);
+    svg.select('#xTicks').call(xAxis);
+    svg.select('#xLabel').text(xField);
+    redraw();
 
   });
   $('#yaxis').change(function() {
     yField = $('#yaxis').val();
-    console.log(yField);
+    yDomain = setDomain(yField);
+    yScale.domain(yDomain);
+    yAxis.scale(yScale);
+    svg.select('#yTicks').call(yAxis);
+    svg.select('#yLabel').text(yField);
+    redraw();
 
   });
 
 });
+
+
+function redraw() {
+  svg.selectAll('circle')
+      .data(data)
+    .transition()
+      .duration(1000)
+      .attr('cx', function(d) { return locate(d, 'x'); } )
+      .attr('cy', function(d) { return locate(d, 'y'); } );
+}
