@@ -170,3 +170,8 @@ function mouseout(d, i) {
       .style('stroke', null);
 }
 
+// execute when dom is ready
+$( function() {
+  $('#xaxis').val(xField);
+  $('#yaxis').val(yField);
+});
