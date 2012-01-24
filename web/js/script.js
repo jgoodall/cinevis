@@ -15,10 +15,8 @@
   * Click to select and show details for multiple films
 
 # Bugs
-  * simplify formatting of labels on axes
   * Fix 'average' row to bring out of regular json data file
   * REMOVE GLOBAL VARS
-  * Fix format for details to show commas, $, etc.
 
 */
 
@@ -117,13 +115,13 @@ d3.json('/data/moviedata.json', function(json) {
     .orient('bottom')
     .ticks(5)
     .tickSize(-(h-axisPadding), 0, 0)
-    .tickFormat(numberFormat);
+    .tickFormat(intFormat);
   yAxis = d3.svg.axis()
     .orient('left')
     .scale(yScale)
     .ticks(5)
     .tickSize(-(w-axisPadding), 0, 0)
-    .tickFormat(numberFormat);
+    .tickFormat(intFormat);
 
   svg = d3.select('#vis')
     .append('svg')
@@ -249,7 +247,7 @@ $( function() {
 
 });
 
-
+// update display for when controls change
 function redraw() {
   svg.selectAll('circle')
       .data(data)
