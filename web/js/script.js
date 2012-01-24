@@ -15,6 +15,7 @@
   * Click to select and show details for multiple films
 
 # Bugs
+  * simplify formatting of labels on axes
   * Fix 'average' row to bring out of regular json data file
   * REMOVE GLOBAL VARS
   * Fix format for details to show commas, $, etc.
