@@ -166,14 +166,14 @@ d3.json('/data/moviedata.json', function(json) {
       .attr('class', 'point')
       .attr('cx', function(d) { return locate(d, 'x'); } )
       .attr('cy', function(d) { return locate(d, 'y'); } )
-      .attr('r', 5)
+      .attr('r', 6)
       .style('fill', function(d) { return colorScale(d[colorField]); } )
       .on('mouseover', mouseover)
       .on('mouseout', mouseout);
 
 });
 
-
+// set details with current item and emphasize visual item
 function mouseover(d, i) {
   $('#details').css('display', 'inline');
   $('#detail-film-value').html(d.Film);
@@ -195,14 +195,17 @@ function mouseover(d, i) {
 
   d3.select(this)
       .style('stroke-width', 2.5)
-      .style('stroke', 'orange');
+      .style('stroke', 'orange')
+      .style('fill-opacity', 1.0);
 }
 
+// reset detail view and visual properties
 function mouseout(d, i) {
   $('#details').css('display', 'none');
   d3.select(this)
       .style('stroke-width', null)
-      .style('stroke', null);
+      .style('stroke', null)
+      .style('fill-opacity', null);
 }
 
 // execute when dom is ready
