@@ -86,6 +86,7 @@ Visualizations
 }
 
 .axis {
+  cursor: default;
   shape-rendering: crispEdges;
 }
 
