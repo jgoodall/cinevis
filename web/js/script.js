@@ -2,8 +2,6 @@
   TODO LIST
 
 # Vis
-  * Change axes to different data fields
-  * Color by story - hard code
   * Color legend
   * Filter by year (bar chart)
   * Filter by story (list)
@@ -33,6 +31,8 @@ var xScale, yScale,
     xAxis, yAxis,
     xAxisPanel, yAxisPanel,
     xLegend, yLegend;
+var colorField = 'Story';
+var colorScale = d3.scale.category20c();
 
 var data;
 var svg;
@@ -134,6 +134,7 @@ d3.json('/data/moviedata.json', function(json) {
       .text(yField);
 //      .on('click', changeAxis('y') );
 
+  // TODO - make this selectable
   svg.selectAll('circle')
     .data(data)
       .enter()
@@ -142,6 +143,7 @@ d3.json('/data/moviedata.json', function(json) {
       .attr('cx', function(d) { return locate(d, 'x'); } )
       .attr('cy', function(d) { return locate(d, 'y'); } )
       .attr('r', 5)
+      .style('fill', function(d) { return colorScale(d[colorField]); } )
       .on('mouseover', mouseover)
       .on('mouseout', mouseout);
 
@@ -214,5 +216,6 @@ function redraw() {
     .transition()
       .duration(1000)
       .attr('cx', function(d) { return locate(d, 'x'); } )
-      .attr('cy', function(d) { return locate(d, 'y'); } );
+      .attr('cy', function(d) { return locate(d, 'y'); } )
+      .style('fill', function(d) { return colorScale(d[colorField]); } );
 }
