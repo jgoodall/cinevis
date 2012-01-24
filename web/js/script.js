@@ -53,13 +53,10 @@ var colorScale = $.inArray(colorField, categoricalFields) >= 0 ? categoricalColo
 var data;
 var svg;
 
-// utility functions
+// format functions
 var numberFormat = d3.format(',.2f');
 var intFormat = d3.format(',');
 var percentFormat = d3.format(',p');
-var isNumber = function (n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-};
 
 // getter/setters
 
@@ -85,6 +82,12 @@ var locate = function(d, axis) {
     scale = yScale;
   }
   return $.isNumeric(datum) ? scale(datum) : domain(axis)[0];
+}
+
+// return the color based on the current scale
+// d = the data item to colorize
+var colorize = function(d) {
+  return colorField !== 'None' ? colorScale(d[colorField]) : null;
 }
 
 // load the data asynchronously
@@ -167,11 +170,12 @@ d3.json('/data/moviedata.json', function(json) {
       .attr('cx', function(d) { return locate(d, 'x'); } )
       .attr('cy', function(d) { return locate(d, 'y'); } )
       .attr('r', 6)
-      .style('fill', function(d) { return colorScale(d[colorField]); } )
+      .style('fill', function(d) { return colorize(d); } )
       .on('mouseover', mouseover)
       .on('mouseout', mouseout);
 
 });
+
 
 // set details with current item and emphasize visual item
 function mouseover(d, i) {
@@ -196,6 +200,7 @@ function mouseover(d, i) {
   d3.select(this)
       .style('stroke-width', 2.5)
       .style('stroke', 'orange')
+      .style('stroke-opacity', 1.0)
       .style('fill-opacity', 1.0);
 }
 
@@ -205,6 +210,7 @@ function mouseout(d, i) {
   d3.select(this)
       .style('stroke-width', null)
       .style('stroke', null)
+      .style('stroke-opacity', null)
       .style('fill-opacity', null);
 }
 
@@ -251,5 +257,5 @@ function redraw() {
       .duration(1000)
       .attr('cx', function(d) { return locate(d, 'x'); } )
       .attr('cy', function(d) { return locate(d, 'y'); } )
-      .style('fill', function(d) { return colorScale(d[colorField]); } );
+      .style('fill', function(d) { return colorize(d); } );
 }
