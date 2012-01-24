@@ -55,6 +55,9 @@ Visualizations
   height: 700px;
 }
 
+#filters {
+  padding-top: 15px;
+}
 
 #details-container {
   height: 100px;

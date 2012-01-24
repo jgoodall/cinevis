@@ -21,6 +21,9 @@
   * Color by story, genre, profitibility
   * Click to select and show details for multiple films
 
+# Bugs
+  * Fix format for details to show commas, $, etc.
+
 */
 
 

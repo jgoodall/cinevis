@@ -20,7 +20,7 @@
 
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
 
-  <link rel='stylesheet' href='css/2d846ae.css'>
+  <link rel='stylesheet' href='css/356a14a.css'>
 
   <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
 
@@ -38,11 +38,14 @@
         <div class="container">
           <a class="brand" href="#">CinemaExplorer</a>
           <ul class="nav">
-            <li><a href="#description" onclick='$("#help").fadeIn("slow");'>
+            <li><a href="#description" onclick='$("#help").slideDown(750);'>
             	What's this?
             </a></li>
-            <li><a href="#description" onclick='$("#about").fadeIn("slow");'>
-            	About Author
+            <li><a href="#description" onclick='$("#data").slideDown(750);'>
+            	Data
+            </a></li>
+            <li><a href="#description" onclick='$("#about").slideDown(750);'>
+            	About the Author
             </a></li>
           </ul>
         </div>
@@ -57,26 +60,42 @@
         </div>
 
         <div class="row">
-          <div id="about" class="span16">
+          <div id="about" class="span12 offset2">
+            <a class="close" href="#" onclick='$("#about").slideUp(750);'>×</a>
+            <h2>About the Author</h2>
+
             <div>John Goodall is a Research Scientist who spends his days working on visual analytics solutions for network security, health care, and other domains. But he also really likes movies. </div>
             <div>Contact him via Twitter <a href='https://twitter.com/#!/johnrgoodall'>@johnrgoodall</a></div>
             <br />
-            <div><a class="btn" id="aboutCloseBtn" href="#" onclick='$("#about").fadeOut("slow");'>
+
+            <div><a class="btn" id="aboutCloseBtn" href="#" onclick='$("#about").slideUp(750);'>
 				    	Close
 				    </a></div>
           </div>
         </div>
 
         <div class="row">
-          <div id="help" class="span16">
+          <div id="help" class="span12 offset2">
+            <a class="close" href="#" onclick='$("#help").slideUp(750);'>×</a>
+            <h2>What's this?</h2>
 
-            <h2>Instructions</h2>
             <div>
-
+              Each circle on the plot represents a film.
             </div>
+            <br />
 
+            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#help").slideUp(750);'>
+				    	Close
+				    </a></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div id="data" class="span12 offset2">
+            <a class="close" href="#" onclick='$("#data").slideUp(750);'>×</a>
             <h2>Data</h2>
-            <div>The film data includes the following fields:
+
+            <div>The data includes most films from 2008-2011. The data includes the following fields:
               <ul>
                 <li><span class="term-name">Profitability</span> : Percent of budget recovered</li>
                 <li><span class="term-name">Budget</span> : Cost, in millions US Dollars</li>
@@ -98,7 +117,11 @@
             <div>The <a href="http://bit.ly/hollywoodbudgets">data set</a> is from the in the <a href="http://www.informationisbeautifulawards.com/2012/01/challenge-of-the-stars/">Information is Beautiful 'Hollywood Budgets' Challenge</a>. The data was pruned to remove films marked 'exclude'. The sources for budget data is <a href="http://www.the-numbers.com/movies/records/allbudgets.php">TheNumbers.com</a> and <a href="http://www.boxofficemojo.com/">BoxOfficeMojo.com</a>.</div>
 
             <br />
-            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#help").fadeOut("slow");'>
+            <div><strong><a href="./data/moviedata.json">Download the JSON data</a></strong>
+            </div>
+
+            <br />
+            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#data").slideUp(750);'>
 				    	Close
 				    </a></div>
           </div>
@@ -106,7 +129,41 @@
 
         <div class="row">
           <div id="vis" class="span12"></div>
-          <div id="filters" class="span4"></div>
+
+          <div id="filters" class="span4">
+
+            <form class="form-stacked">
+              <fieldset>
+                <legend>Controls</legend>
+
+                <div class="clearfix">
+                  <label for="mediumSelect">X Axis</label>
+                  <div class="input">
+                    <select class="medium" name="xaxis" id="xaxis">
+                      <option>Budget</option>
+                      <option>Worldwide Gross</option>
+                      <option>Profitability</option>
+                      <option>Average Rating</option>
+                    </select>
+                  </div>
+                </div><!-- /clearfix -->
+
+                <div class="clearfix">
+                  <label for="mediumSelect">Y Axis</label>
+                  <div class="input">
+                    <select class="medium" name="yaxis" id="yaxis">
+                      <option>Budget</option>
+                      <option>Worldwide Gross</option>
+                      <option>Profitability</option>
+                      <option>Average Rating</option>
+                    </select>
+                  </div>
+                </div><!-- /clearfix -->
+
+              </fieldset>
+            </form>
+
+          </div>
         </div>
 
         <div class="row">
@@ -114,65 +171,71 @@
             <div id="details">
 
               <div class="row">
-                <div class="span6">
+                <div class="span16">
                   <span id="detail-film-value"></span>
                   <span id="detail-year-value"></span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="span6">
+                  <span class="detail-name">Budget</span>
+                  <span id="detail-budget-value" class="detail-value"></span>
                 </div>
                 <div class="span5">
                   <span class="detail-name">Profitability</span>
                   <span id="detail-profitability-value"></span>
                 </div>
-                <div class="span5">
-                  <span class="detail-name">Budget</span>
-                  <span id="detail-budget-value" class="detail-value"></span>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="span4"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</span>
-                <span id="detail-theatres-value"></span>
-                </div>
-                <div class="span4"><span class="detail-name">Worldwide Gross</span>
-                <span id="detail-worldwide-value" class="detail-value"></span>
-                </div>
-                <div class="span4"><span class="detail-name">Audience Rating</span>
+                <div class="span5"><span class="detail-name">Audience Rating</span>
                 <span id="detail-audience-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Genre</span>
-                <span id="detail-genre-value" class="detail-value"></span>
-                </div>
               </div>
 
               <div class="row">
-                <div class="span4"><span class="detail-name">Opening Weekend Revenue</span>
-                <span id="detail-openingweekend-value" class="detail-value"></span>
+                <div class="span6"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</span>
+                <span id="detail-theatres-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Domestic Gross</span>
-                <span id="detail-domestic-value" class="detail-value"></span>
+                <div class="span5"><span class="detail-name">Worldwide Gross</span>
+                <span id="detail-worldwide-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Critic Rating</span>
+                <div class="span5"><span class="detail-name">Critic Rating</span>
                 <span id="detail-rotten-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Story</span>
+
+              </div>
+
+              <div class="row">
+                <div class="span6"><span class="detail-name">Opening Weekend Revenue</span>
+                <span id="detail-openingweekend-value" class="detail-value"></span>
+                </div>
+                <div class="span5"><span class="detail-name">Domestic Gross</span>
+                <span id="detail-domestic-value" class="detail-value"></span>
+                </div>
+                <div class="span5"><span class="detail-name">Story</span>
                 <span id="detail-story-value" class="detail-value"></span>
                 </div>
               </div>
 
               <div class="row">
-                <div class="span4"><span class="detail-name">Opening Weekend per Cinema</span>
+                <div class="span6"><span class="detail-name">Opening Weekend per Cinema</span>
                 <span id="detail-avgcinema-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Foreign Gross</span>
+                <div class="span5"><span class="detail-name">Foreign Gross</span>
                 <span id="detail-foreign-value" class="detail-value"></span>
                 </div>
-                <div class="span4"><span class="detail-name">Oscar</span>
-                <span id="detail-oscar-value" class="detail-value"></span>
-                </div>
-                <div class="span4"><span class="detail-name">Studio</span>
-                <span id="detail-studio-value" class="detail-value"></span>
+                <div class="span5"><span class="detail-name">Genre</span>
+                <span id="detail-genre-value" class="detail-value"></span>
                 </div>
               </div>
 
+              <div class="row">
+                <div class="span6"><span class="detail-name">Studio</span>
+                <span id="detail-studio-value" class="detail-value"></span>
+                </div>
+                <div class="span10"><span class="detail-name">Oscar</span>
+                <span id="detail-oscar-value" class="detail-value"></span>
+                </div>
+              </div>
 
             </div>
           </div>
@@ -195,7 +258,7 @@
   <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
 
 
-  <script defer src='js/aa811d7.js'></script>
+  <script defer src='js/ed5bc19.js'></script>
 
 
   <!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.

@@ -694,16 +694,15 @@ body {
 Visualizations
 */
 
-#help, #about {
-  margin-bottom: 15px;
-  padding: 20px;
+#help, #data, #about {
+  padding: 10px;
 }
 
 #help {
   background: #fdf6e3;
 }
 
-#about {
+#data, #about {
   display: none;
 }
 
@@ -716,6 +715,9 @@ Visualizations
   height: 700px;
 }
 
+#filters {
+  padding-top: 15px;
+}
 
 #details-container {
   height: 100px;
@@ -726,14 +728,16 @@ Visualizations
 }
 
 #detail-film-value {
-  color: #aaa;
+  color: #333;
   font-weight: 600;
   font-size: 20px;
+  padding-right: 15px;
 }
 
 .detail-name {
   color: #999;
   font-size: 11px;
+  padding-right: 10px;
 }
 
 .detail-value {
@@ -743,6 +747,13 @@ Visualizations
 
 .axis {
   shape-rendering: crispEdges;
+}
+
+.axisTitle {
+  cursor: default;
+  stroke: none;
+  fill: #555;
+  font-size: 14px;
 }
 
 .axis path {
