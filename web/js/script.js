@@ -103,8 +103,8 @@ d3.json('/data/moviedata.json', function(data) {
       .attr('y', h-(axisPadding/3))
       .attr('text-anchor', 'middle')
       .attr('class', 'axisTitle')
-      .text(xField)
-      .on('click', changeAxis('x') );
+      .text(xField);
+//      .on('click', changeAxis('x') );
 
   svg.append('g')
       .attr('class', 'y axis')
@@ -116,8 +116,8 @@ d3.json('/data/moviedata.json', function(data) {
       .attr('text-anchor', 'end')
       .attr('class', 'axisTitle')
       .attr('transform', 'translate(-' + axisPadding + ',' + (h * 0.85) + ')rotate(-90)')
-      .text(yField)
-      .on('click', changeAxis('y') );
+      .text(yField);
+//      .on('click', changeAxis('y') );
 
   var plot = svg.selectAll('circle')
     .data(data)
@@ -132,12 +132,6 @@ d3.json('/data/moviedata.json', function(data) {
 
 });
 
-
-// axis = 'x' or 'y'
-function changeAxis(axis) {
-
-
-}
 
 function mouseover(d, i) {
   $('#details').css('display', 'inline');
@@ -174,4 +168,16 @@ function mouseout(d, i) {
 $( function() {
   $('#xaxis').val(xField);
   $('#yaxis').val(yField);
+
+  $('#xaxis').change(function() {
+    xField = $('#xaxis').val();
+    console.log(xField);
+
+  });
+  $('#yaxis').change(function() {
+    yField = $('#yaxis').val();
+    console.log(yField);
+
+  });
+
 });
