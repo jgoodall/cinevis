@@ -29,8 +29,7 @@
 // by default, x = budget, y = gross
 var xField = 'Budget',
     yField = 'Worldwide Gross';
-var xDomain, yDomain,
-    xScale, yScale,
+var xScale, yScale,
     xAxis, yAxis,
     xAxisPanel, yAxisPanel,
     xLegend, yLegend;
@@ -40,26 +39,30 @@ var svg;
 
 var numberFormat = d3.format(',.0f');
 
+var domain = function(axis, field) {
+  if ( arguments.length > 1 ) {
+    var dmn = [ d3.min(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }), d3.max(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }) ]
+    axis === 'x' ? this.xDomain = dmn : this.yDomain = dmn;
+  }
+  return axis === 'x' ? this.xDomain : this.yDomain;
+}
+
+
 // return the value for a given scale, checking if it is a number
 // d = the data item to locate, axis = 'x' or 'y'
 var locate = function(d, axis) {
-  var datum, scale, domain;
+  var datum, scale;
   if ( axis === 'x' ) {
     datum = d[xField];
     scale = xScale;
-    domain = xDomain;
   }
   else {
     datum = d[yField];
     scale = yScale;
-    domain = yDomain;
   }
-  return $.isNumeric(datum) ? scale(datum) : domain[0];
+  return $.isNumeric(datum) ? scale(datum) : domain(axis)[0];
 }
 
-var setDomain = function(field) {
-  return [ d3.min(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }), d3.max(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }) ];
-}
 
 d3.json('/data/moviedata.json', function(json) {
   data = json;
@@ -72,14 +75,14 @@ d3.json('/data/moviedata.json', function(json) {
   var xRange = [0, w - axisPadding],
       yRange = [h - axisPadding, 0];
 
-  xDomain = setDomain(xField, data);
-  yDomain = setDomain(yField, data);
+  domain('x', xField);
+  domain('y', yField);
 
   xScale = d3.scale.linear()
-    .domain(xDomain)
+    .domain(domain('x'))
     .range(xRange);
   yScale = d3.scale.linear()
-    .domain(yDomain)
+    .domain(domain('y'))
     .range(yRange);
 
   xAxis = d3.svg.axis()
@@ -183,8 +186,8 @@ $( function() {
 
   $('#xaxis').change(function() {
     xField = $('#xaxis').val();
-    xDomain = setDomain(xField);
-    xScale.domain(xDomain);
+    domain('x', xField);
+    xScale.domain(domain('x'));
     xAxis.scale(xScale);
     svg.select('#xTicks').call(xAxis);
     svg.select('#xLabel').text(xField);
@@ -193,8 +196,8 @@ $( function() {
   });
   $('#yaxis').change(function() {
     yField = $('#yaxis').val();
-    yDomain = setDomain(yField);
-    yScale.domain(yDomain);
+    domain('y', yField);
+    yScale.domain(domain('y'));
     yAxis.scale(yScale);
     svg.select('#yTicks').call(yAxis);
     svg.select('#yLabel').text(yField);
