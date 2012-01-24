@@ -1,3 +1,9 @@
+# Preprocessing
+
+  * removed extra rows at the end of each sheet
+  * added 'average' row to 2011 sheet
+  * made profitability formula and format consistent throughout sheets
+
 
 # Clean the csv files
 
@@ -6,17 +12,19 @@
     csvstack -g $years -n Year $files > moviedata.csv
 
 
-#Convert to JSON
+# Convert to JSON
 
     csvjson moviedata.csv | jsonlint > moviedata-orig.json
 
 
 # Postprocessing
+
 search and replace:
- * Audience  score % --> Audience Rating
- * Rotten Tomatoes % --> Critic Rating
- * Number of Theatres in US Opening Weekend --> Opening Weekend Theaters
- * Opening Weekend --> Opening Weekend Revenue
- * Box Office Average per US Cinema (Opening Weekend) --> Opening Weekend per Cinema
+
+  * Audience  score % --> Audience Rating
+  * Rotten Tomatoes % --> Critic Rating
+  * Number of Theatres in US Opening Weekend --> Opening Weekend Theaters
+  * Opening Weekend --> Opening Weekend Revenue
+  * Box Office Average per US Cinema (Opening Weekend) --> Opening Weekend per Cinema
 
     cat moviedata-orig.json | sed 's/"Film "/"Film"/' | sed 's/"Audience  score %"/"Audience Rating"/' | sed 's/"Rotten Tomatoes %"/"Critic Rating"/' | sed 's/"Number of Theatres in US Opening Weekend"/"Opening Weekend Theaters"/' | sed 's/"Opening Weekend"/"Opening Weekend Revenue"/' | sed 's/"Box Office Average per US Cinema (Opening Weekend)"/"Opening Weekend per Cinema"/' > moviedata.json

@@ -12,11 +12,9 @@
   * Filter by budget (slider)
   * Filter by average rating (slider)
   * Show only anomalies (more than 1 std dev for each axis)
-  * Color by story, genre, profitibility
   * Click to select and show details for multiple films
 
 # Bugs
-  * Fix profitability - uses different formulas in different years
   * Fix 'average' row to bring out of regular json data file
   * REMOVE GLOBAL VARS
   * Fix format for details to show commas, $, etc.
@@ -55,7 +53,9 @@ var data;
 var svg;
 
 // utility functions
-var numberFormat = d3.format(',.0f');
+var numberFormat = d3.format(',.2f');
+var intFormat = d3.format(',');
+var percentFormat = d3.format(',p');
 var isNumber = function (n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
@@ -177,18 +177,18 @@ function mouseover(d, i) {
   $('#details').css('display', 'inline');
   $('#detail-film-value').html(d.Film);
   $('#detail-year-value').html(d.Year);
-  $('#detail-profitability-value').html(d['Profitability']);
-  $('#detail-budget-value').html(d['Budget']);
-  $('#detail-theatres-value').html(d['Opening Weekend Theaters']);
-  $('#detail-worldwide-value').html(d['Worldwide Gross']);
+  $('#detail-profitability-value').html(percentFormat(d['Profitability']));
+  $('#detail-budget-value').html('$' + numberFormat(d['Budget']) + 'M');
+  $('#detail-worldwide-value').html('$' + numberFormat(d['Worldwide Gross']) + 'M');
+  $('#detail-domestic-value').html('$' + numberFormat(d['Domestic Gross']) + 'M');
+  $('#detail-foreign-value').html('$' + numberFormat(d['Foreign Gross']) + 'M');
   $('#detail-audience-value').html(d['Audience Rating']);
-  $('#detail-genre-value').html(d['Genre']);
-  $('#detail-openingweekend-value').html(d['Opening Weekend Revenue']);
-  $('#detail-domestic-value').html(d['Domestic Gross']);
   $('#detail-rotten-value').html(d['Critic Rating']);
+  $('#detail-theatres-value').html(intFormat(d['Opening Weekend Theaters']));
+  $('#detail-openingweekend-value').html('$' + numberFormat(d['Opening Weekend Revenue']) + 'M');
+  $('#detail-avgcinema-value').html('$' + numberFormat(d['Opening Weekend per Cinema']));
+  $('#detail-genre-value').html(d['Genre']);
   $('#detail-story-value').html(d['Story']);
-  $('#detail-avgcinema-value').html(d['Opening Weekend per Cinema']);
-  $('#detail-foreign-value').html(d['Foreign Gross']);
   $('#detail-oscar-value').html(d['Oscar']);
   $('#detail-studio-value').html(d['Lead Studio']);
 
