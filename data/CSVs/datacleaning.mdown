@@ -1,0 +1,10 @@
+
+
+
+# Postprocessing
+search and replace:
+ * Audience  score % --> Audience Rating
+ * Rotten Tomatoes % --> Critic Rating
+ * Number of Theatres in US Opening Weekend --> Opening Weekend Theaters
+ * Opening Weekend --> Opening Weekend Revenue
+ * Box Office Average per US Cinema (Opening Weekend) --> Opening Weekend per Cinema
