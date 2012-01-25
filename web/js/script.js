@@ -16,6 +16,7 @@
 
 # Bugs
   * REMOVE GLOBAL VARS
+  * Fix styling of slider
 
 */
 
@@ -91,6 +92,16 @@ var colorize = function(d) {
 // load the data asynchronously
 d3.json('/data/moviedata.json', function(json) {
   data = json;
+
+  // set up UI widgets
+  var profitMin = d3.min(data, function(d) { return $.isNumeric(d['Profitability']) ? +d['Profitability'] : 0; });
+  var profitMax = d3.max(data, function(d) { return $.isNumeric(d['Profitability']) ? +d['Profitability'] : 0; });
+  $('#profit-slider').slider({
+    min: profitMin,
+    max: profitMax,
+    values: [profitMin, profitMax]
+  });
+  $( "#profit-slider-text" ).val( $( "#profit-slider" ).slider( "values", 0 ) + " - " + $( "#profit-slider" ).slider( "values", 1 ) );
 
 
 
@@ -217,6 +228,20 @@ function mouseout(d, i) {
 
 // execute when dom is ready
 $( function() {
+  // set up sliders
+  $('#profit-slider').slider({
+    range: true,
+    min: 0,
+    max: 100,
+    values: [ 0, 100 ],
+    slide: function( event, ui ) {
+      $( "#profit-slider-text" ).val( + ui.values[0] + " - " + ui.values[1] );
+    }
+  });
+  $( "#profit-slider-text" ).val( $( "#profit-slider" ).slider( "values", 0 ) + " - " + $( "#profit-slider" ).slider( "values", 1 ) );
+
+
+
   // set controls to be defaults
   $('#xaxis').val(xField);
   $('#yaxis').val(yField);
@@ -246,6 +271,13 @@ $( function() {
     colorScale = $.inArray(colorField, categoricalFields) >= 0 ? categoricalColorScale : numericColorScale.domain([d3.min(data, function(d) {return d[colorField];}), d3.sum(data, function(d) {return d[colorField];}) / data.length, d3.max(data, function(d) {return d[colorField];})]);
     // TODO - update color legend
     redraw();
+  });
+
+  // TODO - filter data based on slider
+  $('#profit-slider').on('slidestop', function(event, ui) {
+    var min = ui.values[0];
+    var max = ui.values[1];
+    console.log('Filter out profitability values not in range: ' + min + ' / ' + max);
   });
 
 });
