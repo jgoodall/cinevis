@@ -15,7 +15,6 @@
   * Click to select and show details for multiple films
 
 # Bugs
-  * Fix 'average' row to bring out of regular json data file
   * REMOVE GLOBAL VARS
 
 */
