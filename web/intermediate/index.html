@@ -12,17 +12,16 @@
        More info: h5bp.com/b/378 -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title>Movie Explorer</title>
-  <meta name="description" content="">
+  <title>CineVis</title>
+  <meta name="description" content="CineVis: Budgets, Revenues and Ratings of Recent Films">
 
   <!-- Mobile viewport optimized: h5bp.com/viewport -->
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
 
-  <link rel='stylesheet' href='css/356a14a.css'>
+  <link rel='stylesheet' href='css/03c6a45.css'>
 
-  <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
 
   <!-- All JavaScript at the bottom, except this Modernizr build incl. Respond.js
        Respond is a polyfill for min/max-width media queries. Modernizr enables HTML5 elements & feature detects;
@@ -36,16 +35,16 @@
     <div class="topbar">
       <div class="fill">
         <div class="container">
-          <a class="brand" href="#">CinemaExplorer</a>
+          <a class="brand" href="#">CineVis</a>
           <ul class="nav">
             <li><a href="#description" onclick='$("#help").slideDown(750);'>
-            	What's this?
+            	Help
             </a></li>
             <li><a href="#description" onclick='$("#data").slideDown(750);'>
             	Data
             </a></li>
             <li><a href="#description" onclick='$("#about").slideDown(750);'>
-            	About the Author
+            	About
             </a></li>
           </ul>
         </div>
@@ -56,7 +55,7 @@
 
       <div class="content">
         <div class="page-header">
-          <h1>CinemaExplorer <small>Movie Revenues and Ratings</small></h1>
+          <h1>CineVis &nbsp; <small>Budgets, Revenues &amp; Ratings of Recent Films</small></h1>
         </div>
 
         <div class="row">
@@ -77,10 +76,10 @@
         <div class="row">
           <div id="help" class="span12 offset2">
             <a class="close" href="#" onclick='$("#help").slideUp(750);'>×</a>
-            <h2>What's this?</h2>
+            <h2>What am I looking at?</h2>
 
             <div>
-              Each circle on the plot represents a film.
+              This plot shows financial and rating data about recent films. Each circle on the plot represents a film.
             </div>
             <br />
 
@@ -134,16 +133,21 @@
 
             <form class="form-stacked">
               <fieldset>
-                <legend>Controls</legend>
 
                 <div class="clearfix">
                   <label for="mediumSelect">X Axis</label>
                   <div class="input">
                     <select class="medium" name="xaxis" id="xaxis">
+                      <option>Profitability</option>
                       <option>Budget</option>
                       <option>Worldwide Gross</option>
-                      <option>Profitability</option>
-                      <option>Average Rating</option>
+                      <option>Domestic Gross</option>
+                      <option>Foreign Gross</option>
+                      <option>Audience Rating</option>
+                      <option>Critic Rating</option>
+                      <option>Opening Weekend Revenue</option>
+                      <option>Opening Weekend Theaters</option>
+                      <option>Opening Weekend per Cinema</option>
                     </select>
                   </div>
                 </div><!-- /clearfix -->
@@ -152,16 +156,49 @@
                   <label for="mediumSelect">Y Axis</label>
                   <div class="input">
                     <select class="medium" name="yaxis" id="yaxis">
+                      <option>Profitability</option>
                       <option>Budget</option>
                       <option>Worldwide Gross</option>
-                      <option>Profitability</option>
-                      <option>Average Rating</option>
+                      <option>Domestic Gross</option>
+                      <option>Foreign Gross</option>
+                      <option>Audience Rating</option>
+                      <option>Critic Rating</option>
+                      <option>Opening Weekend Revenue</option>
+                      <option>Opening Weekend Theaters</option>
+                      <option>Opening Weekend per Cinema</option>
                     </select>
                   </div>
                 </div><!-- /clearfix -->
 
+                <div class="clearfix">
+                  <label for="mediumSelect">Color</label>
+                  <div class="input">
+                    <select class="medium" name="color" id="color">
+                      <option>Story</option>
+                      <option>Genre</option>
+                      <option>Lead Studio</option>
+                      <option>Profitability</option>
+                      <option>Worldwide Gross</option>
+                      <option>Domestic Gross</option>
+                      <option>Foreign Gross</option>
+                      <option>Audience Rating</option>
+                      <option>Critic Rating</option>
+                      <option>Opening Weekend Revenue</option>
+                      <option>Opening Weekend Theaters</option>
+                      <option>Opening Weekend per Cinema</option>
+                      <option>None</option>
+                    </select>
+                  </div>
+                </div><!-- /clearfix -->
               </fieldset>
             </form>
+
+            <p>
+              <label for="profit-slider-text">Profitability:</label>
+              <input type="text" id="profit-slider-text" style="border:0; color:#999;" />
+            </p>
+            <div id="profit-slider"></div>
+
 
           </div>
         </div>
@@ -192,8 +229,8 @@
               </div>
 
               <div class="row">
-                <div class="span6"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</span>
-                <span id="detail-theatres-value"></span>
+                <div class="span6"><span class="detail-name">Opening Weekend Revenue</span>
+                <span id="detail-openingweekend-value" class="detail-value"></span>
                 </div>
                 <div class="span5"><span class="detail-name">Worldwide Gross</span>
                 <span id="detail-worldwide-value" class="detail-value"></span>
@@ -205,8 +242,8 @@
               </div>
 
               <div class="row">
-                <div class="span6"><span class="detail-name">Opening Weekend Revenue</span>
-                <span id="detail-openingweekend-value" class="detail-value"></span>
+                <div class="span6"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</span>
+                <span id="detail-theatres-value"></span>
                 </div>
                 <div class="span5"><span class="detail-name">Domestic Gross</span>
                 <span id="detail-domestic-value" class="detail-value"></span>
@@ -258,7 +295,7 @@
   <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
 
 
-  <script defer src='js/03f535c.js'></script>
+  <script defer src='js/714ca65.js'></script>
 
 
   <!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.
