@@ -183,15 +183,15 @@ function mouseover(d, i) {
   $('#detail-film-value').html(d.Film);
   $('#detail-year-value').html(d.Year);
   $('#detail-profitability-value').html(percentFormat(d['Profitability']));
-  $('#detail-budget-value').html('$' + numberFormat(d['Budget']) + 'M');
-  $('#detail-worldwide-value').html('$' + numberFormat(d['Worldwide Gross']) + 'M');
-  $('#detail-domestic-value').html('$' + numberFormat(d['Domestic Gross']) + 'M');
-  $('#detail-foreign-value').html('$' + numberFormat(d['Foreign Gross']) + 'M');
+  $('#detail-budget-value').html('$ ' + numberFormat(d['Budget']) + 'M');
+  $('#detail-worldwide-value').html('$ ' + numberFormat(d['Worldwide Gross']) + 'M');
+  $('#detail-domestic-value').html('$ ' + numberFormat(d['Domestic Gross']) + 'M');
+  $('#detail-foreign-value').html('$ ' + numberFormat(d['Foreign Gross']) + 'M');
   $('#detail-audience-value').html(d['Audience Rating']);
   $('#detail-rotten-value').html(d['Critic Rating']);
   $('#detail-theatres-value').html(intFormat(d['Opening Weekend Theaters']));
-  $('#detail-openingweekend-value').html('$' + numberFormat(d['Opening Weekend Revenue']) + 'M');
-  $('#detail-avgcinema-value').html('$' + numberFormat(d['Opening Weekend per Cinema']));
+  $('#detail-openingweekend-value').html('$ ' + numberFormat(d['Opening Weekend Revenue']) + 'M');
+  $('#detail-avgcinema-value').html('$ ' + numberFormat(d['Opening Weekend per Cinema']));
   $('#detail-genre-value').html(d['Genre']);
   $('#detail-story-value').html(d['Story']);
   $('#detail-oscar-value').html(d['Oscar']);
@@ -206,7 +206,8 @@ function mouseover(d, i) {
 
 // reset detail view and visual properties
 function mouseout(d, i) {
-//  $('#details').css('display', 'none'); - keep details on screen for highlighted
+// TODO - keep details on screen for highlighted - for development only
+//  $('#details').css('display', 'none');
   d3.select(this)
       .style('stroke-width', null)
       .style('stroke', null)

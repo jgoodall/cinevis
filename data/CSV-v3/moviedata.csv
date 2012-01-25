@@ -1,4 +1,4 @@
-Year,Film ,Lead Studio,Rotten Tomatoes %,Audience  score %,Story,Genre,Number of Theatres in US Opening Weekend,Box Office Average per US Cinema (Opening Weekend),Domestic Gross,Foreign Gross,Worldwide Gross,Budget,Profitability,Opening Weekend,Oscar,Bafta
+Year,Film,Lead Studio,Critic Rating,Audience Rating,Story,Genre,Opening Weekend Theaters,Opening Weekend per Cinema,Domestic Gross,Foreign Gross,Worldwide Gross,Budget,Profitability,Opening Weekend Revenue,Oscar,Bafta
 2011,Average,,52.84,61.42,,,"2,810.31","8,764.92",61.33,93.53,144.86,52.25,,20.14,,
 2011,The Tree Of Life,Independant,84,61,Discovery,Drama,4,93230,13.30,41.00,54.30,32,1.70,0.37,,
 2011,Midnight in Paris,Sony,93,84,Love,Romance,944,61777,56.18,83.00,139.18,17,8.19,5.83,,
