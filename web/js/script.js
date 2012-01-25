@@ -281,40 +281,34 @@ $( function() {
   $('#profit-slider').on('slidestop', function(event, ui) {
     var min = ui.values[0];
     var max = ui.values[1];
-    var filter = {field: 'Profitability', min: min, max: max};
-    redraw(filter);
+    filter({field: 'Profitability', min: min, max: max});
   });
 
 });
 
+// TODO - transitions not working
+// filter out data based on the spec
+// spec: {field: dataField, min: minValue, max: maxValue}
+function filter(spec) {
+  svg.selectAll('circle')
+      .select(function(d) { return d[spec.field] < spec.min || d[spec.field] > spec.max ? this : null; })
+    .transition()
+      .duration(1500)
+      .style('fill-opacity', 0)
+      .style('display', 'none');
+  svg.selectAll('circle')
+      .select(function(d) { return d[spec.field] >= spec.min && d[spec.field] <= spec.max ? this : null; })
+    .transition()
+      .duration(1500)
+      .style('fill-opacity', null)
+      .style('display', 'inherit');
+}
 
 // update display for when controls change
 function redraw(filter) {
-// TODO - fix the axis when filter is applied - or fix 'locate' function
-  var plot = svg.selectAll('circle')
-      .data(arguments.length === 1 ? data.filter(function(d) { return d[filter.field] >= filter.min && d[filter.field] <= filter.max; }) : data);
-
-  plot.enter().append('circle')
-      .attr('class', 'point')
-      .attr('cx', function(d) { return locate(d, 'x'); } )
-      .attr('cy', function(d) { return locate(d, 'y'); } )
-      .attr('r', 6)
-      .style('fill', '#fff' )
-      .on('mouseover', mouseover)
-      .on('mouseout', mouseout)
+  svg.selectAll('circle')
     .transition()
       .duration(1500)
-      .style("fill-opacity", function(d) { return colorize(d); } );
-
-  plot.transition()
-      .duration(1500)
       .attr('cx', function(d) { return locate(d, 'x'); } )
-      .attr('cy', function(d) { return locate(d, 'y'); } )
-      .style('fill', function(d) { return colorize(d); } );
-
-  plot.exit()
-    .transition()
-      .duration(1500)
-      .style("fill-opacity", 0.0)
-      .remove()
+      .attr('cy', function(d) { return locate(d, 'y'); } );
 }
