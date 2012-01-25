@@ -16,6 +16,9 @@
 
 # Bugs
   * REMOVE GLOBAL VARS
+  * Paranormal Activity (2009) is not being included in result data set
+  * fix profitability in data when no budget data is available (change to 0?)
+  * save filter so when changing axis it remains
   * Fix styling of slider
 
 */
@@ -55,7 +58,7 @@ var svg;
 // format functions
 var numberFormat = d3.format(',.2f');
 var intFormat = d3.format(',');
-var percentFormat = d3.format(',p');
+var percentFormat = d3.format(',%');
 
 // getter/setters
 
@@ -94,14 +97,14 @@ d3.json('/data/moviedata.json', function(json) {
   data = json;
 
   // set up UI widgets
-  var profitMin = d3.min(data, function(d) { return $.isNumeric(d['Profitability']) ? +d['Profitability'] : 0; });
-  var profitMax = d3.max(data, function(d) { return $.isNumeric(d['Profitability']) ? +d['Profitability'] : 0; });
+  var profitMin = d3.round( d3.min(data, function(d) { return $.isNumeric(d['Profitability']) ? +d['Profitability'] : 0; }) );
+  var profitMax = d3.round( d3.max(data, function(d) { return $.isNumeric(d['Profitability']) ? +d['Profitability'] : 0; }) );
   $('#profit-slider').slider({
     min: profitMin,
     max: profitMax,
     values: [profitMin, profitMax]
   });
-  $( "#profit-slider-text" ).val( $( "#profit-slider" ).slider( "values", 0 ) + " - " + $( "#profit-slider" ).slider( "values", 1 ) );
+  $( "#profit-slider-text" ).val( percentFormat($( "#profit-slider" ).slider( "values", 0 )) + " - " + percentFormat($( "#profit-slider" ).slider( "values", 1 )) );
 
 
 
@@ -233,12 +236,13 @@ $( function() {
     range: true,
     min: 0,
     max: 100,
-    values: [ 0, 100 ],
+    values: [ 0, 1000 ],
+    animate: true,
     slide: function( event, ui ) {
-      $( "#profit-slider-text" ).val( + ui.values[0] + " - " + ui.values[1] );
+      $( "#profit-slider-text" ).val( percentFormat(ui.values[0]) + " - " + percentFormat(ui.values[1]) );
     }
   });
-  $( "#profit-slider-text" ).val( $( "#profit-slider" ).slider( "values", 0 ) + " - " + $( "#profit-slider" ).slider( "values", 1 ) );
+  $( "#profit-slider-text" ).val( percentFormat($( "#profit-slider" ).slider( "values", 0 )) + " - " + percentFormat($( "#profit-slider" ).slider( "values", 1 )) );
 
 
 
@@ -277,18 +281,40 @@ $( function() {
   $('#profit-slider').on('slidestop', function(event, ui) {
     var min = ui.values[0];
     var max = ui.values[1];
-    console.log('Filter out profitability values not in range: ' + min + ' / ' + max);
+    var filter = {field: 'Profitability', min: min, max: max};
+    redraw(filter);
   });
 
 });
 
+
 // update display for when controls change
-function redraw() {
-  svg.selectAll('circle')
-      .data(data)
+function redraw(filter) {
+// TODO - fix the axis when filter is applied - or fix 'locate' function
+  var plot = svg.selectAll('circle')
+      .data(arguments.length === 1 ? data.filter(function(d) { return d[filter.field] >= filter.min && d[filter.field] <= filter.max; }) : data);
+
+  plot.enter().append('circle')
+      .attr('class', 'point')
+      .attr('cx', function(d) { return locate(d, 'x'); } )
+      .attr('cy', function(d) { return locate(d, 'y'); } )
+      .attr('r', 6)
+      .style('fill', '#fff' )
+      .on('mouseover', mouseover)
+      .on('mouseout', mouseout)
     .transition()
-      .duration(1000)
+      .duration(1500)
+      .style("fill-opacity", function(d) { return colorize(d); } );
+
+  plot.transition()
+      .duration(1500)
       .attr('cx', function(d) { return locate(d, 'x'); } )
       .attr('cy', function(d) { return locate(d, 'y'); } )
       .style('fill', function(d) { return colorize(d); } );
+
+  plot.exit()
+    .transition()
+      .duration(1500)
+      .style("fill-opacity", 0.0)
+      .remove()
 }
