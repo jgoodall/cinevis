@@ -38,13 +38,13 @@
           <a class="brand" href="#">CineVis</a>
           <ul class="nav">
             <li><a href="#description" onclick='$("#help").slideDown(750);'>
-            	Help
+              Help
             </a></li>
             <li><a href="#description" onclick='$("#data").slideDown(750);'>
-            	Data
+              Data
             </a></li>
             <li><a href="#description" onclick='$("#about").slideDown(750);'>
-            	About
+              About
             </a></li>
           </ul>
         </div>
@@ -68,8 +68,8 @@
             <br />
 
             <div><a class="btn" id="aboutCloseBtn" href="#" onclick='$("#about").slideUp(750);'>
-				    	Close
-				    </a></div>
+              Close
+            </a></div>
           </div>
         </div>
 
@@ -84,8 +84,8 @@
             <br />
 
             <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#help").slideUp(750);'>
-				    	Close
-				    </a></div>
+              Close
+            </a></div>
           </div>
         </div>
 
@@ -121,11 +121,12 @@
 
             <br />
             <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#data").slideUp(750);'>
-				    	Close
-				    </a></div>
+              Close
+            </a></div>
           </div>
         </div>
 
+        <!-- Main Content -->
         <div class="row">
           <div id="vis" class="span12"></div>
 
@@ -135,9 +136,9 @@
               <fieldset>
 
                 <div class="clearfix">
-                  <label for="mediumSelect">X Axis</label>
+                  <label for="xaxis">X Axis</label>
                   <div class="input">
-                    <select class="medium" name="xaxis" id="xaxis">
+                    <select class="span3" name="xaxis" id="xaxis">
                       <option>Profitability</option>
                       <option>Budget</option>
                       <option>Worldwide Gross</option>
@@ -153,9 +154,9 @@
                 </div><!-- /clearfix -->
 
                 <div class="clearfix">
-                  <label for="mediumSelect">Y Axis</label>
+                  <label for="yaxis">Y Axis</label>
                   <div class="input">
-                    <select class="medium" name="yaxis" id="yaxis">
+                    <select class="span3" name="yaxis" id="yaxis">
                       <option>Profitability</option>
                       <option>Budget</option>
                       <option>Worldwide Gross</option>
@@ -171,9 +172,9 @@
                 </div><!-- /clearfix -->
 
                 <div class="clearfix">
-                  <label for="mediumSelect">Color</label>
+                  <label for="color">Color</label>
                   <div class="input">
-                    <select class="medium" name="color" id="color">
+                    <select class="span3" name="color" id="color">
                       <option>Story</option>
                       <option>Genre</option>
                       <option>Lead Studio</option>
@@ -190,19 +191,21 @@
                     </select>
                   </div>
                 </div><!-- /clearfix -->
+                
               </fieldset>
             </form>
 
-            <p>
-              <label for="profit-slider-text">Profitability:</label>
-              <input type="text" id="profit-slider-text" style="border:0; color:#999;" />
-            </p>
+            <div class="slider-container">
+              <span class="slider-label">Profitability</span>
+              <input type="text" id="profit-slider-text" class="slider-value" />
+            </div>
             <div id="profit-slider"></div>
 
 
           </div>
         </div>
 
+        <!-- Details of selections -->
         <div class="row">
           <div id="details-container" class="span16">
             <div id="details">
@@ -219,58 +222,76 @@
                   <span class="detail-name">Budget</span>
                   <span id="detail-budget-value" class="detail-value"></span>
                 </div>
+                
                 <div class="span5">
                   <span class="detail-name">Profitability</span>
-                  <span id="detail-profitability-value"></span>
+                  <span id="detail-profitability-value" class="detail-value"></span>
                 </div>
-                <div class="span5"><span class="detail-name">Audience Rating</span>
-                <span id="detail-audience-value" class="detail-value"></span>
+                
+                <div class="span5">
+                  <span class="detail-name">Audience Rating</span>
+                  <span id="detail-audience-value" class="detail-value"></span>
                 </div>
               </div>
 
               <div class="row">
-                <div class="span6"><span class="detail-name">Opening Weekend Revenue</span>
-                <span id="detail-openingweekend-value" class="detail-value"></span>
+                <div class="span6">
+                  <span class="detail-name">Opening Weekend Revenue</span>
+                  <span id="detail-openingweekend-value" class="detail-value"></span>
                 </div>
-                <div class="span5"><span class="detail-name">Worldwide Gross</span>
-                <span id="detail-worldwide-value" class="detail-value"></span>
+                
+                <div class="span5">
+                  <span class="detail-name">Worldwide Gross</span>
+                  <span id="detail-worldwide-value" class="detail-value"></span>
                 </div>
-                <div class="span5"><span class="detail-name">Critic Rating</span>
-                <span id="detail-rotten-value" class="detail-value"></span>
+                
+                <div class="span5">
+                  <span class="detail-name">Critic Rating</span>
+                  <span id="detail-rotten-value" class="detail-value"></span>
                 </div>
 
               </div>
 
               <div class="row">
                 <div class="span6"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</span>
-                <span id="detail-theatres-value"></span>
+                <span id="detail-theatres-value" class="detail-value"></span>
                 </div>
+                
                 <div class="span5"><span class="detail-name">Domestic Gross</span>
                 <span id="detail-domestic-value" class="detail-value"></span>
                 </div>
+                
                 <div class="span5"><span class="detail-name">Story</span>
                 <span id="detail-story-value" class="detail-value"></span>
                 </div>
               </div>
 
               <div class="row">
-                <div class="span6"><span class="detail-name">Opening Weekend per Cinema</span>
-                <span id="detail-avgcinema-value" class="detail-value"></span>
+                <div class="span6">
+                  <span class="detail-name">Opening Weekend per Cinema</span>
+                  <span id="detail-avgcinema-value" class="detail-value"></span>
                 </div>
-                <div class="span5"><span class="detail-name">Foreign Gross</span>
-                <span id="detail-foreign-value" class="detail-value"></span>
+                
+                <div class="span5">
+                  <span class="detail-name">Foreign Gross</span>
+                  <span id="detail-foreign-value" class="detail-value"></span>
                 </div>
-                <div class="span5"><span class="detail-name">Genre</span>
-                <span id="detail-genre-value" class="detail-value"></span>
+                
+                <div class="span5">
+                  <span class="detail-name">Genre</span>
+                  <span id="detail-genre-value" class="detail-value"></span>
                 </div>
               </div>
 
               <div class="row">
-                <div class="span6"><span class="detail-name">Studio</span>
-                <span id="detail-studio-value" class="detail-value"></span>
+                <div class="span6">
+                  <span class="detail-name">Studio</span>
+                  <span id="detail-studio-value" class="detail-value"></span>
                 </div>
-                <div class="span10"><span class="detail-name">Oscar</span>
-                <span id="detail-oscar-value" class="detail-value"></span>
+                
+                <div class="span10">
+                  <span class="detail-name">Oscar</span>
+                  <span id="detail-oscar-value" class="detail-value"></span>
                 </div>
               </div>
 

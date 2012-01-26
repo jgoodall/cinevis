@@ -59,6 +59,24 @@ Visualizations
   padding-top: 15px;
 }
 
+.slider-container {
+  text-align: left;
+  margin-left: 0px;
+}
+
+.slider-label {
+  width: 100px; 
+  margin-right: 20px;
+}
+
+.slider-value {
+  width: 120px;
+  border: 0;
+  color: #999;
+  font-size: 11px;
+  text-align: right;
+}
+
 #details-container {
   height: 100px;
 }

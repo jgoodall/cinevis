@@ -19,7 +19,6 @@
   * Paranormal Activity (2009) is not being included in result data set
   * fix profitability in data when no budget data is available (change to 0?)
   * save filter so when changing axis it remains
-  * Fix styling of slider
 
 */
 
@@ -239,10 +238,10 @@ $( function() {
     values: [ 0, 1000 ],
     animate: true,
     slide: function( event, ui ) {
-      $( "#profit-slider-text" ).val( percentFormat(ui.values[0]) + " - " + percentFormat(ui.values[1]) );
+      $( "#profit-slider-text" ).html( percentFormat(ui.values[0]) + " - " + percentFormat(ui.values[1]) );
     }
   });
-  $( "#profit-slider-text" ).val( percentFormat($( "#profit-slider" ).slider( "values", 0 )) + " - " + percentFormat($( "#profit-slider" ).slider( "values", 1 )) );
+  $( "#profit-slider-text" ).html( percentFormat($( "#profit-slider" ).slider( "values", 0 )) + " - " + percentFormat($( "#profit-slider" ).slider( "values", 1 )) );
 
 
 
