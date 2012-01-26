@@ -91,20 +91,27 @@ var colorize = function(d) {
   return colorField !== 'None' ? colorScale(d[colorField]) : null;
 }
 
+// set up UI widgets based on data values
+var updateSliderData = function(sliderElement, labelElement, dataField) {
+  var minVal = d3.round( d3.min(data, function(d) { return $.isNumeric(d[dataField]) ? +d[dataField] : 0; }) );
+  var maxVal = d3.round( d3.max(data, function(d) { return $.isNumeric(d[dataField]) ? +d[dataField] : 0; }) );
+  $(sliderElement).slider({
+    min: minVal,
+    max: maxVal,
+    values: [minVal, maxVal]
+  });
+  $( labelElement ).val( percentFormat($( sliderElement ).slider( "values", 0 )) + " - " + percentFormat($( sliderElement ).slider( "values", 1 )) );
+}
+
 // load the data asynchronously
 d3.json('/data/moviedata.json', function(json) {
   data = json;
-
-  // set up UI widgets
-  var profitMin = d3.round( d3.min(data, function(d) { return $.isNumeric(d['Profitability']) ? +d['Profitability'] : 0; }) );
-  var profitMax = d3.round( d3.max(data, function(d) { return $.isNumeric(d['Profitability']) ? +d['Profitability'] : 0; }) );
-  $('#profit-slider').slider({
-    min: profitMin,
-    max: profitMax,
-    values: [profitMin, profitMax]
-  });
-  $( "#profit-slider-text" ).val( percentFormat($( "#profit-slider" ).slider( "values", 0 )) + " - " + percentFormat($( "#profit-slider" ).slider( "values", 1 )) );
-
+  
+  updateSliderData('#profit-slider', '#profit-slider-text', 'Profitability');
+  updateSliderData('#budget-slider', '#budget-slider-text', 'Budget');
+  updateSliderData('#wgross-slider', '#wgross-slider-text', 'Worldwide Gross');
+  updateSliderData('#arating-slider', '#arating-slider-text', 'Audience Rating');
+  updateSliderData('#crating-slider', '#crating-slider-text', 'Critic Rating');
 
 
   var w = $('#vis').width(),
@@ -228,21 +235,31 @@ function mouseout(d, i) {
       .style('fill-opacity', null);
 }
 
-// execute when dom is ready
-$( function() {
-  // set up sliders
-  $('#profit-slider').slider({
+
+// set up sliders and input boxes, and listen for events
+var setupSliders = function(sliderElement, labelElement, labelFormatter, dataField) {
+  var sliderOpts = {
     range: true,
     min: 0,
     max: 100,
     values: [ 0, 1000 ],
-    animate: true,
-    slide: function( event, ui ) {
-      $( "#profit-slider-text" ).html( percentFormat(ui.values[0]) + " - " + percentFormat(ui.values[1]) );
-    }
+    animate: true
+  };
+  $(sliderElement).slider(sliderOpts);
+  $(sliderElement).on('slide', function( event, ui ) {
+      $( labelElement ).val( labelFormatter(ui.values[0]) + " - " + labelFormatter(ui.values[1]) );
+      filter({field: dataField, min: ui.values[0], max: ui.values[1]});
   });
-  $( "#profit-slider-text" ).html( percentFormat($( "#profit-slider" ).slider( "values", 0 )) + " - " + percentFormat($( "#profit-slider" ).slider( "values", 1 )) );
+}
 
+// execute when dom is ready
+$( function() {
+
+  setupSliders('#profit-slider', '#profit-slider-text', percentFormat, 'Profitability');
+  setupSliders('#budget-slider', '#budget-slider-text', intFormat, 'Budget');
+  setupSliders('#wgross-slider', '#wgross-slider-text', intFormat, 'Worldwide Gross');
+  setupSliders('#arating-slider', '#arating-slider-text', intFormat, 'Audience Rating');
+  setupSliders('#crating-slider', '#crating-slider-text', intFormat, 'Critic Rating');
 
 
   // set controls to be defaults
@@ -274,10 +291,6 @@ $( function() {
     colorScale = $.inArray(colorField, categoricalFields) >= 0 ? categoricalColorScale : numericColorScale.domain([d3.min(data, function(d) {return d[colorField];}), d3.sum(data, function(d) {return d[colorField];}) / data.length, d3.max(data, function(d) {return d[colorField];})]);
     // TODO - update color legend
     redraw();
-  });
-
-  $('#profit-slider').on('slide', function(event, ui) {
-    filter({field: 'Profitability', min: ui.values[0], max: ui.values[1]});
   });
 
 });
