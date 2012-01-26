@@ -6,11 +6,11 @@
   * Filter by year (bar chart)
   * Filter by story (list)
   * Filter by genre (list)
-  * Filter by profitability (slider)
   * Filter by budget (slider)
   * Filter by worldwide gross (slider)
   * Filter by budget (slider)
   * Filter by average rating (slider)
+  * Show std deviations on axes/background
   * Show only anomalies (more than 1 std dev for each axis)
   * Click to select and show details for multiple films
 
@@ -181,9 +181,9 @@ d3.json('/data/moviedata.json', function(json) {
       .enter()
     .append('circle')
       .attr('class', 'point')
+      .attr('r', 6)
       .attr('cx', function(d) { return locate(d, 'x'); } )
       .attr('cy', function(d) { return locate(d, 'y'); } )
-      .attr('r', 6)
       .style('fill', function(d) { return colorize(d); } )
       .on('mouseover', mouseover)
       .on('mouseout', mouseout);
@@ -277,38 +277,32 @@ $( function() {
     redraw();
   });
 
-  // TODO - filter data based on slider
-  $('#profit-slider').on('slidestop', function(event, ui) {
-    var min = ui.values[0];
-    var max = ui.values[1];
-    filter({field: 'Profitability', min: min, max: max});
+  $('#profit-slider').on('slide', function(event, ui) {
+    filter({field: 'Profitability', min: ui.values[0], max: ui.values[1]});
   });
 
 });
 
-// TODO - transitions not working
 // filter out data based on the spec
 // spec: {field: dataField, min: minValue, max: maxValue}
 function filter(spec) {
+  // match data not in the range and hide those items
   svg.selectAll('circle')
-      .select(function(d) { return d[spec.field] < spec.min || d[spec.field] > spec.max ? this : null; })
-    .transition()
-      .duration(1500)
-      .style('fill-opacity', 0)
-      .style('display', 'none');
+      .select(function(d) { return (d[spec.field] < spec.min || d[spec.field] > spec.max) ? this : null; })
+      .style('display', 'none'); // hide items
+  
+  // match data within the range (for previously hidden (display:none) items)
   svg.selectAll('circle')
       .select(function(d) { return d[spec.field] >= spec.min && d[spec.field] <= spec.max ? this : null; })
-    .transition()
-      .duration(1500)
-      .style('fill-opacity', null)
-      .style('display', 'inherit');
+      .style('display', 'inherit'); // show item
 }
 
-// update display for when controls change
+// animate updated display when controls change (axes, color)
 function redraw(filter) {
   svg.selectAll('circle')
     .transition()
       .duration(1500)
+      .style('fill', function(d) { return colorize(d); } )
       .attr('cx', function(d) { return locate(d, 'x'); } )
       .attr('cy', function(d) { return locate(d, 'y'); } );
 }
