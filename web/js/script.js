@@ -61,15 +61,22 @@ var numberFormat = d3.format(',.2f');
 var intFormat = d3.format(',');
 var percentFormat = d3.format(',%');
 
-// getter/setters
-
-var domain = function(axis, field) {
+// getter/setter for domain (min/max) of a given data field
+//   axis = 'x' or 'y', field is the data field to find the domain for
+//   optional arguments: min, max - if set use those rather than figure out
+var domain = function(axis, field, min, max) {
+  var dmn = [];
+  if ( arguments.length === 4 ) {
+    dmn = [min,max];
+  }
+  else if ( arguments.length === 2 ) {
+    dmn = [ d3.min(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }), d3.max(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }) ];
+  }
   if ( arguments.length > 1 ) {
-    var dmn = [ d3.min(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }), d3.max(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }) ]
     axis === 'x' ? this.xDomain = dmn : this.yDomain = dmn;
   }
   return axis === 'x' ? this.xDomain : this.yDomain;
-}
+};
 
 
 // return the value for a given scale, checking if it is a number
@@ -85,13 +92,13 @@ var locate = function(d, axis) {
     scale = yScale;
   }
   return $.isNumeric(datum) ? scale(datum) : domain(axis)[0];
-}
+};
 
 // return the color based on the current scale
 // d = the data item to colorize
 var colorize = function(d) {
   return colorField !== 'None' ? colorScale(d[colorField]) : null;
-}
+};
 
 // load the data asynchronously
 d3.json('/data/moviedata.json', function(json) {
@@ -250,12 +257,15 @@ var setupSliders = function(sliderElement, labelElement, labelFormatter, dataFie
   };
   $(sliderElement).slider(sliderOpts);
   $(sliderElement).on('slide', function( event, ui ) {
-      $( labelElement ).val(
-        (opts && opts.prepend ? opts.prepend : '') + labelFormatter(ui.values[0]) + (opts && opts.append ? opts.append : '') +
-        " - " +
-        (opts && opts.prepend ? opts.prepend : '') + labelFormatter(ui.values[1]) + (opts && opts.append ? opts.append : '')
-      );
-      filter({field: dataField, min: ui.values[0], max: ui.values[1]});
+    $( labelElement ).val(
+      (opts && opts.prepend ? opts.prepend : '') + labelFormatter(ui.values[0]) + (opts && opts.append ? opts.append : '') +
+      " - " +
+      (opts && opts.prepend ? opts.prepend : '') + labelFormatter(ui.values[1]) + (opts && opts.append ? opts.append : '')
+    );
+    filter({field: dataField, min: ui.values[0], max: ui.values[1]});
+  });
+  $(sliderElement).on('slidestop', function( event, ui ){
+    zoom();
   });
 
   // set up the text values for the min and max
@@ -322,34 +332,46 @@ var filter = function(spec) {
       })
       .style('display', 'inherit'); // show item
 
-  if ( spec.field === $('#xaxis').val() ) {
-    zoom('x', spec);
-  }
-  if ( spec.field === $('#yaxis').val() ) {
-    zoom('y', spec);
-  }
 }
 
 // animate to zoomed in/out axis if filters change
-// TODO - this should only happen when slider stops moving
-function zoom(axis, spec) {
+function zoom() {
 
-  if ( axis === 'x' ) {
-    xField = $('#xaxis').val();
-//    domain('x', xField); -- this wont work because coded to data min/max
-    xScale.domain([spec.min, spec.max]);
-    xAxis.scale(xScale);
-    svg.select('#xTicks').call(xAxis);
-    redraw();
+  // This really needs to check the max/min values of *displayed* items
+  // for each axis, otherwise only zooms when axis values change.
+
+  var xField = $('#xaxis').val();
+  var yField = $('#yaxis').val();
+  var xDomain, yDomain;
+  
+  var xfield, yfield;
+  for ( var i = 0; i < allFilters.length; i++ ) {
+    if ( allFilters[i].field === xField ) {
+      xDomain = [allFilters[i].min, allFilters[i].max];
+    }
+    else if ( allFilters[i].field === yField ) {
+      yDomain = [allFilters[i].min, allFilters[i].max];
+    }
   }
-  if ( axis === 'y' ) {
-    yField = $('#yaxis').val();
-//    domain('y', yField);
-    yScale.domain([spec.min, spec.max]);
-    yAxis.scale(yScale);
-    svg.select('#yTicks').call(yAxis);
-    redraw();
-  }
+
+  domain('x', xField, xDomain[0], xDomain[1]);
+  xScale.domain(domain('x'));
+  xAxis.scale(xScale);
+  svg.select('#xTicks')
+    .transition()
+      .duration(1500)
+      .call(xAxis);
+  redraw();
+
+  domain('y', yField, yDomain[0], yDomain[1]);
+  yScale.domain(domain('y'));
+  yAxis.scale(yScale);
+  svg.select('#yTicks')
+    .transition()
+      .duration(1500)
+      .call(yAxis);
+  redraw();
+
 }
 
 // animate updated display when controls change (axes, color)
