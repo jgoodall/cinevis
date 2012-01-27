@@ -1,5 +1,6 @@
 html, body {
   background-color: #eee;
+  font-size: 13px;
 }
 
 body {
@@ -103,31 +104,41 @@ Visualizations
   font-size: 12px;
 }
 
+/* Field name on the axis */
+.axisTitle {
+  cursor: default;
+  stroke: none;
+  fill: #777;
+  font-size: 15px;
+}
+
 .axis {
   cursor: default;
   shape-rendering: crispEdges;
 }
 
-.axisTitle {
-  cursor: default;
-  stroke: none;
-  fill: #555;
-  font-size: 14px;
-}
-
+/* Line on the actual axis. Must be fill: none */
 .axis path {
   fill: none;
+  stroke-width: 0.8;
+  stroke: #333;
 }
 
+/* Numeric tick labels */
+.axis text {
+  stroke: none;
+  fill: #777;
+  font-size: 11px;
+}
+
+/* Internal tick lines */
 .axis line {
-  stroke: #aaa;
-  stroke-opacity: .5;
+  stroke-width: 0.6;
+  stroke: #999;
+  stroke-opacity: .3;
 }
 
-.axis path {
-  stroke: black;
-}
-
+/* Each of the points (or circles) in scatterplot */
 .point {
   stroke: #fff;
   stroke-width: 0.5px;

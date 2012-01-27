@@ -101,7 +101,7 @@ var colorize = function(d) {
 };
 
 // load the data asynchronously
-d3.json('/data/moviedata.json', function(json) {
+d3.json('data/moviedata.json', function(json) {
   data = json;
 
   setupSliders('#profit-slider', '#profit-slider-text', percentFormat, 'Profitability');
@@ -119,8 +119,8 @@ d3.json('/data/moviedata.json', function(json) {
   var w = $('#vis').width(),
       h = $('#vis').height();
 
-  var axisPadding = 65; // for padding on the axis side
-  var padding = 10;     // for padding opposite side of axis
+  var axisPadding = 50; // for padding on the axis side
+  var padding = 8;     // for padding opposite side of axis
   var xRange = [0, w - axisPadding],
       yRange = [h - axisPadding, 0];
 
@@ -162,7 +162,7 @@ d3.json('/data/moviedata.json', function(json) {
   xLegend = svg.append('text')
       .attr('id', 'xLabel')
       .attr('x', w/2)
-      .attr('y', h-(axisPadding/3))
+      .attr('y', h-(axisPadding)+30)
       .attr('text-anchor', 'middle')
       .attr('class', 'axisTitle')
       .text(xField);
@@ -176,7 +176,7 @@ d3.json('/data/moviedata.json', function(json) {
   yLegend = svg.append('text')
       .attr('id', 'yLabel')
       .attr('x', h/2)
-      .attr('y', (axisPadding/3))
+      .attr('y', axisPadding - 30) // x and y are flipped on rotation
       .attr('text-anchor', 'end')
       .attr('class', 'axisTitle')
       .attr('transform', 'translate(-' + axisPadding + ',' + (h * 0.85) + ')rotate(-90)')
