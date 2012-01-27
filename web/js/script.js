@@ -19,6 +19,7 @@
   * Paranormal Activity (2009) is not being included in result data set
   * fix profitability in data when no budget data is available (change to 0?)
   * save filter so when changing axis it remains
+  * set labelformatter correctly on sliders on first load
 
 */
 
@@ -30,6 +31,12 @@ var xScale, yScale,
     xAxis, yAxis,
     xAxisPanel, yAxisPanel,
     xLegend, yLegend;
+
+// build the array of filters to be populated when filters are set
+var allFilters = [];
+$.each(['Profitability', 'Budget', 'Worldwide Gross', 'Audience Rating', 'Critic Rating'], function(index, value) {
+  allFilters.push( {field: value, min:-1, max:-1} );
+});
 
 // color: scales for numeric fields
 var redBlue = ["rgb(103, 0, 31)", "rgb( 178, 24, 43)", "rgb( 214, 96, 77)", "rgb( 244, 165, 130)", "rgb( 253, 219, 199)", "rgb( 209, 229, 240)", "rgb( 146, 197, 222)", "rgb( 67, 147, 195)", "rgb( 33, 102, 172)", "rgb( 5, 48, 97)"];
@@ -100,13 +107,21 @@ var updateSliderData = function(sliderElement, labelElement, dataField) {
     max: maxVal,
     values: [minVal, maxVal]
   });
+  // update default allFilters values
+  for ( var i = 0 ; i < allFilters.length ; i++ ) {
+    if ( dataField === allFilters[i].field ) {
+      allFilters[i].min = minVal;
+      allFilters[i].max = maxVal;
+      break;
+    }
+  }
   $( labelElement ).val( percentFormat($( sliderElement ).slider( "values", 0 )) + " - " + percentFormat($( sliderElement ).slider( "values", 1 )) );
 }
 
 // load the data asynchronously
 d3.json('/data/moviedata.json', function(json) {
   data = json;
-  
+
   updateSliderData('#profit-slider', '#profit-slider-text', 'Profitability');
   updateSliderData('#budget-slider', '#budget-slider-text', 'Budget');
   updateSliderData('#wgross-slider', '#wgross-slider-text', 'Worldwide Gross');
@@ -252,6 +267,94 @@ var setupSliders = function(sliderElement, labelElement, labelFormatter, dataFie
   });
 }
 
+// filter out data based on the spec
+// spec: {field: dataField, min: minValue, max: maxValue}
+var filter = function(spec) {
+
+  var testIdx = 0
+  // update global filters
+  for ( var i = 0; i < allFilters.length; i++ ) {
+    if ( allFilters[i].field === spec.field ) {
+      allFilters[i].min = spec.min;
+      allFilters[i].max = spec.max;
+      testIdx = i;
+      break;
+    }
+  }
+
+  // manually setting full filter
+  // TODO - NOT WORKING
+  var hide = function(d) {
+    return function(d) {
+      return (d[spec.field] < spec.min || d[spec.field] > spec.max);
+
+//       (d[ allFilters[0].field ] < allFilters[0].min || d[ allFilters[0].field ] > allFilters[0].max)  ||
+//       (d[ allFilters[1].field ] < allFilters[1].min || d[ allFilters[1].field ] > allFilters[1].max)  ||
+//       (d[ allFilters[2].field ] < allFilters[2].min || d[ allFilters[2].field ] > allFilters[2].max)  ||
+//       (d[ allFilters[3].field ] < allFilters[3].min || d[ allFilters[3].field ] > allFilters[3].max)  ||
+//       (d[ allFilters[4].field ] < allFilters[4].min || d[ allFilters[4].field ] > allFilters[4].max);
+    }
+  };
+  var show = function(d) {
+    return function(d) {
+      return (d[spec.field] >= spec.min && d[spec.field] <= spec.max);
+
+//       (d[ allFilters[0].field ] >= allFilters[0].min && d[ allFilters[0].field ] <= allFilters[0].max)  ||
+//       (d[ allFilters[1].field ] >= allFilters[1].min && d[ allFilters[1].field ] <= allFilters[1].max)  ||
+//       (d[ allFilters[2].field ] >= allFilters[2].min && d[ allFilters[2].field ] <= allFilters[2].max)  ||
+//       (d[ allFilters[3].field ] >= allFilters[3].min && d[ allFilters[3].field ] <= allFilters[3].max)  ||
+//       (d[ allFilters[4].field ] >= allFilters[4].min && d[ allFilters[4].field ] <= allFilters[4].max);
+    }
+  };
+
+  // match data not in the range and hide those items
+  svg.selectAll('circle')
+      .select(function(d) {
+        if ( (d[ allFilters[0].field ] < allFilters[0].min || d[ allFilters[0].field ] > allFilters[0].max)
+          || (d[ allFilters[1].field ] < allFilters[1].min || d[ allFilters[1].field ] > allFilters[1].max)
+          || (d[ allFilters[2].field ] < allFilters[2].min || d[ allFilters[2].field ] > allFilters[2].max)
+          || (d[ allFilters[3].field ] < allFilters[3].min || d[ allFilters[3].field ] > allFilters[3].max)
+          || (d[ allFilters[4].field ] < allFilters[4].min || d[ allFilters[4].field ] > allFilters[4].max)
+          ) {
+          return this;
+        }
+        else {
+          return null;
+        }
+      })
+//      .select(function(d) { return (d[spec.field] < spec.min || d[spec.field] > spec.max) ? this : null; })
+      .style('display', 'none'); // hide items
+
+  // match data within the range (for previously hidden (display:none) items)
+  svg.selectAll('circle')
+      .select(function(d) {
+        if ( (d[ allFilters[0].field ] >= allFilters[0].min && d[ allFilters[0].field ] <= allFilters[0].max)
+          && (d[ allFilters[1].field ] >= allFilters[1].min && d[ allFilters[1].field ] <= allFilters[1].max)
+          && (d[ allFilters[2].field ] >= allFilters[2].min && d[ allFilters[2].field ] <= allFilters[2].max)
+          && (d[ allFilters[3].field ] >= allFilters[3].min && d[ allFilters[3].field ] <= allFilters[3].max)
+          && (d[ allFilters[4].field ] >= allFilters[4].min && d[ allFilters[4].field ] <= allFilters[4].max)
+          ) {
+          return this;
+        }
+        else {
+          return null;
+        }
+      })
+//      .select(function(d) { return d[spec.field] >= spec.min && d[spec.field] <= spec.max ? this : null; })
+      .style('display', 'inherit'); // show item
+}
+
+// animate updated display when controls change (axes, color)
+function redraw(filter) {
+  svg.selectAll('circle')
+    .transition()
+      .duration(1500)
+      .style('fill', function(d) { return colorize(d); } )
+      .attr('cx', function(d) { return locate(d, 'x'); } )
+      .attr('cy', function(d) { return locate(d, 'y'); } );
+}
+
+
 // execute when dom is ready
 $( function() {
 
@@ -295,26 +398,4 @@ $( function() {
 
 });
 
-// filter out data based on the spec
-// spec: {field: dataField, min: minValue, max: maxValue}
-function filter(spec) {
-  // match data not in the range and hide those items
-  svg.selectAll('circle')
-      .select(function(d) { return (d[spec.field] < spec.min || d[spec.field] > spec.max) ? this : null; })
-      .style('display', 'none'); // hide items
-  
-  // match data within the range (for previously hidden (display:none) items)
-  svg.selectAll('circle')
-      .select(function(d) { return d[spec.field] >= spec.min && d[spec.field] <= spec.max ? this : null; })
-      .style('display', 'inherit'); // show item
-}
 
-// animate updated display when controls change (axes, color)
-function redraw(filter) {
-  svg.selectAll('circle')
-    .transition()
-      .duration(1500)
-      .style('fill', function(d) { return colorize(d); } )
-      .attr('cx', function(d) { return locate(d, 'x'); } )
-      .attr('cy', function(d) { return locate(d, 'y'); } );
-}
