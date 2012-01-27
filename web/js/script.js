@@ -6,10 +6,6 @@
   * Filter by year (bar chart)
   * Filter by story (list)
   * Filter by genre (list)
-  * Filter by budget (slider)
-  * Filter by worldwide gross (slider)
-  * Filter by budget (slider)
-  * Filter by average rating (slider)
   * Show std deviations on axes/background
   * Show only anomalies (more than 1 std dev for each axis)
   * Click to select and show details for multiple films
@@ -18,8 +14,6 @@
   * REMOVE GLOBAL VARS
   * Paranormal Activity (2009) is not being included in result data set
   * fix profitability in data when no budget data is available (change to 0?)
-  * save filter so when changing axis it remains
-  * set labelformatter correctly on sliders on first load
 
 */
 
@@ -98,35 +92,20 @@ var colorize = function(d) {
   return colorField !== 'None' ? colorScale(d[colorField]) : null;
 }
 
-// set up UI widgets based on data values
-var updateSliderData = function(sliderElement, labelElement, dataField) {
-  var minVal = d3.round( d3.min(data, function(d) { return $.isNumeric(d[dataField]) ? +d[dataField] : 0; }) );
-  var maxVal = d3.round( d3.max(data, function(d) { return $.isNumeric(d[dataField]) ? +d[dataField] : 0; }) );
-  $(sliderElement).slider({
-    min: minVal,
-    max: maxVal,
-    values: [minVal, maxVal]
-  });
-  // update default allFilters values
-  for ( var i = 0 ; i < allFilters.length ; i++ ) {
-    if ( dataField === allFilters[i].field ) {
-      allFilters[i].min = minVal;
-      allFilters[i].max = maxVal;
-      break;
-    }
-  }
-  $( labelElement ).val( percentFormat($( sliderElement ).slider( "values", 0 )) + " - " + percentFormat($( sliderElement ).slider( "values", 1 )) );
-}
-
 // load the data asynchronously
 d3.json('/data/moviedata.json', function(json) {
   data = json;
 
-  updateSliderData('#profit-slider', '#profit-slider-text', 'Profitability');
-  updateSliderData('#budget-slider', '#budget-slider-text', 'Budget');
-  updateSliderData('#wgross-slider', '#wgross-slider-text', 'Worldwide Gross');
-  updateSliderData('#arating-slider', '#arating-slider-text', 'Audience Rating');
-  updateSliderData('#crating-slider', '#crating-slider-text', 'Critic Rating');
+  setupSliders('#profit-slider', '#profit-slider-text', percentFormat, 'Profitability');
+  setupSliders('#budget-slider', '#budget-slider-text', intFormat, 'Budget', {prepend:'$', append:' M'});
+  setupSliders('#wgross-slider', '#wgross-slider-text', intFormat, 'Worldwide Gross', {prepend:'$', append:' M'});
+  setupSliders('#arating-slider', '#arating-slider-text', intFormat, 'Audience Rating', {min: 0, max: 100});
+  setupSliders('#crating-slider', '#crating-slider-text', intFormat, 'Critic Rating', {min: 0, max: 100});
+
+  // set controls to be defaults
+  $('#xaxis').val(xField);
+  $('#yaxis').val(yField);
+  $('#color').val(colorField);
 
 
   var w = $('#vis').width(),
@@ -252,60 +231,61 @@ function mouseout(d, i) {
 
 
 // set up sliders and input boxes, and listen for events
-var setupSliders = function(sliderElement, labelElement, labelFormatter, dataField) {
+// opts can be:
+//  min, max : hard code the domain regardless of the data
+//  prepend, append : add text to prepend or append to label values
+var setupSliders = function(sliderElement, labelElement, labelFormatter, dataField, opts) {
+
+  var minVal = opts && opts.min ? opts.min : d3.round( d3.min(data, function(d) { return $.isNumeric(d[dataField]) ? +d[dataField] : 0; }) );
+  var maxVal = opts && opts.max ? opts.max : d3.round( d3.max(data, function(d) { return $.isNumeric(d[dataField]) ? +d[dataField] : 0; }) );
+
+  // init the sliders
   var sliderOpts = {
     range: true,
-    min: 0,
-    max: 100,
-    values: [ 0, 1000 ],
+    min: minVal,
+    max: maxVal,
+    values: [ minVal, maxVal ],
     animate: true
   };
   $(sliderElement).slider(sliderOpts);
   $(sliderElement).on('slide', function( event, ui ) {
-      $( labelElement ).val( labelFormatter(ui.values[0]) + " - " + labelFormatter(ui.values[1]) );
+      $( labelElement ).val(
+        (opts && opts.prepend ? opts.prepend : '') + labelFormatter(ui.values[0]) + (opts && opts.append ? opts.append : '') +
+        " - " +
+        (opts && opts.prepend ? opts.prepend : '') + labelFormatter(ui.values[1]) + (opts && opts.append ? opts.append : '')
+      );
       filter({field: dataField, min: ui.values[0], max: ui.values[1]});
   });
+
+  // set up the text values for the min and max
+  $( labelElement ).val(
+    (opts && opts.prepend ? opts.prepend : '') + labelFormatter(minVal) + (opts && opts.append ? opts.append : '') +
+    " - " +
+    (opts && opts.prepend ? opts.prepend : '') + labelFormatter(maxVal) + (opts && opts.append ? opts.append : '')
+  );
+
+  // update default allFilters values
+  for ( var i = 0 ; i < allFilters.length ; i++ ) {
+    if ( dataField === allFilters[i].field ) {
+      allFilters[i].min = minVal;
+      allFilters[i].max = maxVal;
+      break;
+    }
+  }
 }
 
 // filter out data based on the spec
 // spec: {field: dataField, min: minValue, max: maxValue}
 var filter = function(spec) {
 
-  var testIdx = 0
   // update global filters
   for ( var i = 0; i < allFilters.length; i++ ) {
     if ( allFilters[i].field === spec.field ) {
       allFilters[i].min = spec.min;
       allFilters[i].max = spec.max;
-      testIdx = i;
       break;
     }
   }
-
-  // manually setting full filter
-  // TODO - NOT WORKING
-  var hide = function(d) {
-    return function(d) {
-      return (d[spec.field] < spec.min || d[spec.field] > spec.max);
-
-//       (d[ allFilters[0].field ] < allFilters[0].min || d[ allFilters[0].field ] > allFilters[0].max)  ||
-//       (d[ allFilters[1].field ] < allFilters[1].min || d[ allFilters[1].field ] > allFilters[1].max)  ||
-//       (d[ allFilters[2].field ] < allFilters[2].min || d[ allFilters[2].field ] > allFilters[2].max)  ||
-//       (d[ allFilters[3].field ] < allFilters[3].min || d[ allFilters[3].field ] > allFilters[3].max)  ||
-//       (d[ allFilters[4].field ] < allFilters[4].min || d[ allFilters[4].field ] > allFilters[4].max);
-    }
-  };
-  var show = function(d) {
-    return function(d) {
-      return (d[spec.field] >= spec.min && d[spec.field] <= spec.max);
-
-//       (d[ allFilters[0].field ] >= allFilters[0].min && d[ allFilters[0].field ] <= allFilters[0].max)  ||
-//       (d[ allFilters[1].field ] >= allFilters[1].min && d[ allFilters[1].field ] <= allFilters[1].max)  ||
-//       (d[ allFilters[2].field ] >= allFilters[2].min && d[ allFilters[2].field ] <= allFilters[2].max)  ||
-//       (d[ allFilters[3].field ] >= allFilters[3].min && d[ allFilters[3].field ] <= allFilters[3].max)  ||
-//       (d[ allFilters[4].field ] >= allFilters[4].min && d[ allFilters[4].field ] <= allFilters[4].max);
-    }
-  };
 
   // match data not in the range and hide those items
   svg.selectAll('circle')
@@ -322,7 +302,6 @@ var filter = function(spec) {
           return null;
         }
       })
-//      .select(function(d) { return (d[spec.field] < spec.min || d[spec.field] > spec.max) ? this : null; })
       .style('display', 'none'); // hide items
 
   // match data within the range (for previously hidden (display:none) items)
@@ -340,8 +319,14 @@ var filter = function(spec) {
           return null;
         }
       })
-//      .select(function(d) { return d[spec.field] >= spec.min && d[spec.field] <= spec.max ? this : null; })
       .style('display', 'inherit'); // show item
+
+  zoom();
+}
+
+// animate to zoomed in/out axis if filters change
+function zoom() {
+
 }
 
 // animate updated display when controls change (axes, color)
@@ -355,20 +340,8 @@ function redraw(filter) {
 }
 
 
-// execute when dom is ready
+// set up listeners when dom is ready
 $( function() {
-
-  setupSliders('#profit-slider', '#profit-slider-text', percentFormat, 'Profitability');
-  setupSliders('#budget-slider', '#budget-slider-text', intFormat, 'Budget');
-  setupSliders('#wgross-slider', '#wgross-slider-text', intFormat, 'Worldwide Gross');
-  setupSliders('#arating-slider', '#arating-slider-text', intFormat, 'Audience Rating');
-  setupSliders('#crating-slider', '#crating-slider-text', intFormat, 'Critic Rating');
-
-
-  // set controls to be defaults
-  $('#xaxis').val(xField);
-  $('#yaxis').val(yField);
-  $('#color').val(colorField);
 
   // listen for changes to axis and color controls
   $('#xaxis').change(function() {
