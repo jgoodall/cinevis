@@ -2,6 +2,7 @@
   TODO LIST
 
 # Vis
+  * Zoom in/out of axis based on filters
   * Color legend
   * Filter by year (bar chart)
   * Filter by story (list)
@@ -321,12 +322,34 @@ var filter = function(spec) {
       })
       .style('display', 'inherit'); // show item
 
-  zoom();
+  if ( spec.field === $('#xaxis').val() ) {
+    zoom('x', spec);
+  }
+  if ( spec.field === $('#yaxis').val() ) {
+    zoom('y', spec);
+  }
 }
 
 // animate to zoomed in/out axis if filters change
-function zoom() {
+// TODO - this should only happen when slider stops moving
+function zoom(axis, spec) {
 
+  if ( axis === 'x' ) {
+    xField = $('#xaxis').val();
+//    domain('x', xField); -- this wont work because coded to data min/max
+    xScale.domain([spec.min, spec.max]);
+    xAxis.scale(xScale);
+    svg.select('#xTicks').call(xAxis);
+    redraw();
+  }
+  if ( axis === 'y' ) {
+    yField = $('#yaxis').val();
+//    domain('y', yField);
+    yScale.domain([spec.min, spec.max]);
+    yAxis.scale(yScale);
+    svg.select('#yTicks').call(yAxis);
+    redraw();
+  }
 }
 
 // animate updated display when controls change (axes, color)
