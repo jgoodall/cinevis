@@ -2,7 +2,6 @@
   TODO LIST
 
 # Vis
-  * Zoom in/out of axis based on filters
   * Color legend
   * Filter by year (bar chart)
   * Filter by story (list)
@@ -12,12 +11,16 @@
   * Click to select and show details for multiple films
 
 # Bugs
+  * reset filters when changing axes - something like
+     d3.selectAll('circle').each(function(d) {d.display = true;});
   * REMOVE GLOBAL VARS
   * Paranormal Activity (2009) is not being included in result data set
   * fix profitability in data when no budget data is available (change to 0?)
 
 */
 
+// ensure that all transitions are on the same timing
+var TRANSITION_DURATION = 2500;
 
 // axes: by default, x = budget, y = gross
 var xField = 'Budget',
@@ -307,6 +310,7 @@ var filter = function(spec) {
           || (d[ allFilters[3].field ] < allFilters[3].min || d[ allFilters[3].field ] > allFilters[3].max)
           || (d[ allFilters[4].field ] < allFilters[4].min || d[ allFilters[4].field ] > allFilters[4].max)
           ) {
+          d.display = false;
           return this;
         }
         else {
@@ -324,6 +328,7 @@ var filter = function(spec) {
           && (d[ allFilters[3].field ] >= allFilters[3].min && d[ allFilters[3].field ] <= allFilters[3].max)
           && (d[ allFilters[4].field ] >= allFilters[4].min && d[ allFilters[4].field ] <= allFilters[4].max)
           ) {
+          d.display = true;
           return this;
         }
         else {
@@ -334,32 +339,26 @@ var filter = function(spec) {
 
 }
 
-// animate to zoomed in/out axis if filters change
+// animate to zoomed in/out axis if filters change based on the
+//  min/max values for the x/y fields that are shown (where data
+//  item has display = true)
 function zoom() {
-
-  // This really needs to check the max/min values of *displayed* items
-  // for each axis, otherwise only zooms when axis values change.
 
   var xField = $('#xaxis').val();
   var yField = $('#yaxis').val();
-  var xDomain, yDomain;
-  
-  var xfield, yfield;
-  for ( var i = 0; i < allFilters.length; i++ ) {
-    if ( allFilters[i].field === xField ) {
-      xDomain = [allFilters[i].min, allFilters[i].max];
-    }
-    else if ( allFilters[i].field === yField ) {
-      yDomain = [allFilters[i].min, allFilters[i].max];
-    }
-  }
+
+  var xDomain = [d3.min(data, function(d, i) { return d.display && $.isNumeric(d[xField]) ? +d[xField] : null ; }) ,
+            d3.max(data, function(d, i) { return d.display && $.isNumeric(d[xField]) ? +d[xField] : null ; })];
+
+  var yDomain = [d3.min(data, function(d, i) { return d.display && $.isNumeric(d[xField]) ? +d[yField] : null ; }) ,
+            d3.max(data, function(d, i) { return d.display && $.isNumeric(d[xField]) ? +d[yField] : null ; })];
 
   domain('x', xField, xDomain[0], xDomain[1]);
   xScale.domain(domain('x'));
   xAxis.scale(xScale);
   svg.select('#xTicks')
     .transition()
-      .duration(1500)
+      .duration(TRANSITION_DURATION)
       .call(xAxis);
   redraw();
 
@@ -368,7 +367,7 @@ function zoom() {
   yAxis.scale(yScale);
   svg.select('#yTicks')
     .transition()
-      .duration(1500)
+      .duration(TRANSITION_DURATION)
       .call(yAxis);
   redraw();
 
@@ -378,7 +377,7 @@ function zoom() {
 function redraw(filter) {
   svg.selectAll('circle')
     .transition()
-      .duration(1500)
+      .duration(TRANSITION_DURATION)
       .style('fill', function(d) { return colorize(d); } )
       .attr('cx', function(d) { return locate(d, 'x'); } )
       .attr('cy', function(d) { return locate(d, 'y'); } );
