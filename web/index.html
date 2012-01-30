@@ -89,8 +89,13 @@
             <h2>What am I looking at?</h2>
 
             <div>
-              This plot shows financial and rating data about recent films. Each circle on the plot represents a film.
+              This plot shows financial and rating data about recent films. Each circle on the plot represents a film. Each axis can be set to represent a different data field using the menus on the right. The data field used to color the circles can also be set using the menus.
             </div>
+            <div>
+              Filters for most of the data fields are also shown at the right. Adjusting the filters changes the data shown on the screen. As data is limited the visible circles will automatically be zoomed in to show only the films that match the current filters.
+            </div>
+            <div>
+              Hovering over a circle shows details of the film that the circle represents below the plot.
             <br />
 
             <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#help").slideUp(750);'>
@@ -146,7 +151,7 @@
               <fieldset>
 
                 <div class="clearfix">
-                  <label for="xaxis">X Axis</label>
+                  <label for="xaxis">Horizontal Axis (x)</label>
                   <div class="input">
                     <select class="span3" name="xaxis" id="xaxis">
                       <option>Profitability</option>
@@ -164,7 +169,7 @@
                 </div><!-- /clearfix -->
 
                 <div class="clearfix">
-                  <label for="yaxis">Y Axis</label>
+                  <label for="yaxis">Vertical Axis (y)</label>
                   <div class="input">
                     <select class="span3" name="yaxis" id="yaxis">
                       <option>Profitability</option>
@@ -201,7 +206,7 @@
                     </select>
                   </div>
                 </div><!-- /clearfix -->
-                
+
               </fieldset>
             </form>
 
@@ -212,25 +217,25 @@
                 <input type="text" id="profit-slider-text" class="slider-value" />
               </div>
               <div id="profit-slider"></div>
-  
+
               <div class="slider-container">
                 <span class="slider-label">Budget</span>
                 <input type="text" id="budget-slider-text" class="slider-value" />
               </div>
               <div id="budget-slider"></div>
-  
+
               <div class="slider-container">
                 <span class="slider-label">Worldwide Gross</span>
                 <input type="text" id="wgross-slider-text" class="slider-value" />
               </div>
               <div id="wgross-slider"></div>
-  
+
               <div class="slider-container">
                 <span class="slider-label">Audience Rating</span>
                 <input type="text" id="arating-slider-text" class="slider-value" />
               </div>
               <div id="arating-slider"></div>
-  
+
               <div class="slider-container">
                 <span class="slider-label">Critic Rating</span>
                 <input type="text" id="crating-slider-text" class="slider-value" />
@@ -260,12 +265,12 @@
                   <span class="detail-name">Budget</span>
                   <span id="detail-budget-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span5">
                   <span class="detail-name">Profitability</span>
                   <span id="detail-profitability-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span5">
                   <span class="detail-name">Audience Rating</span>
                   <span id="detail-audience-value" class="detail-value"></span>
@@ -277,12 +282,12 @@
                   <span class="detail-name">Opening Weekend Revenue</span>
                   <span id="detail-openingweekend-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span5">
                   <span class="detail-name">Worldwide Gross</span>
                   <span id="detail-worldwide-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span5">
                   <span class="detail-name">Critic Rating</span>
                   <span id="detail-rotten-value" class="detail-value"></span>
@@ -294,11 +299,11 @@
                 <div class="span6"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</span>
                 <span id="detail-theatres-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span5"><span class="detail-name">Domestic Gross</span>
                 <span id="detail-domestic-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span5"><span class="detail-name">Story</span>
                 <span id="detail-story-value" class="detail-value"></span>
                 </div>
@@ -309,12 +314,12 @@
                   <span class="detail-name">Opening Weekend per Cinema</span>
                   <span id="detail-avgcinema-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span5">
                   <span class="detail-name">Foreign Gross</span>
                   <span id="detail-foreign-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span5">
                   <span class="detail-name">Genre</span>
                   <span id="detail-genre-value" class="detail-value"></span>
@@ -326,7 +331,7 @@
                   <span class="detail-name">Studio</span>
                   <span id="detail-studio-value" class="detail-value"></span>
                 </div>
-                
+
                 <div class="span10">
                   <span class="detail-name">Oscar</span>
                   <span id="detail-oscar-value" class="detail-value"></span>
