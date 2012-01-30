@@ -5,5 +5,6 @@
 ant minify
 cp -rp ../publish/ ../../../gh-pages/
 cd ../../../gh-pages/
-git commit -a -m 'rebuild'
+git add .
+git commit -m 'rebuild'
 git push github gh-pages
