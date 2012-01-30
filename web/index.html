@@ -154,7 +154,7 @@
               <fieldset>
 
                 <div class="clearfix">
-                  <label for="xaxis">Horizontal Axis (x)</label>
+                  <label for="xaxis">Horizontal Axis (x) <span id="xaxis-scale" class="axis-scale">(linear)</span></label>
                   <div class="input">
                     <select class="span3" name="xaxis" id="xaxis">
                       <option>Profitability</option>
@@ -172,7 +172,7 @@
                 </div><!-- /clearfix -->
 
                 <div class="clearfix">
-                  <label for="yaxis">Vertical Axis (y)</label>
+                  <label for="yaxis">Vertical Axis (y) &nbsp; <span id="yaxis-scale" class="axis-scale">(linear)</span></label>
                   <div class="input">
                     <select class="span3" name="yaxis" id="yaxis">
                       <option>Profitability</option>
@@ -363,7 +363,7 @@
 
 
   <!-- scripts concatenated and minified via build script -->
-  <script defer src="js/mylibs/d3.min.js"></script>
+  <script defer src="js/mylibs/d3.js"></script>
   <script defer src="js/plugins.js"></script>
   <script defer src="js/script.js"></script>
   <!-- end scripts -->

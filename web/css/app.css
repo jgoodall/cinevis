@@ -53,6 +53,13 @@ Visualizations
   padding-top: 15px;
 }
 
+/* link to toggle between linear and log scale */
+.axis-scale {
+  font-size:90%;
+  color: #666;
+  text-decoration: underline;
+}
+
 .slider-container {
   text-align: left;
   padding-top: 10px;

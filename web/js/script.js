@@ -74,6 +74,9 @@ var domain = function(axis, field, min, max) {
   }
   else if ( arguments.length === 2 ) {
     dmn = [ d3.min(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }), d3.max(data, function(d) { return $.isNumeric(d[field]) ? +d[field] : 0; }) ];
+    // log scales cannot have a 0, so increase the min/max if necessary
+    dmn[0] === 0 ? dmn[0] = 1 : null;
+    dmn[1] === 0 ? dmn[1] = 1 : null;
   }
   if ( arguments.length > 1 ) {
     axis === 'x' ? this.xDomain = dmn : this.yDomain = dmn;
@@ -81,6 +84,22 @@ var domain = function(axis, field, min, max) {
   return axis === 'x' ? this.xDomain : this.yDomain;
 };
 
+// getter/setter for range (min/max) of a given scale
+var range = function(axis, min, max) {
+  if ( arguments.length > 1 ) {
+    axis === 'x' ? this.xRange = [min, max] : this.yRange = [min, max];
+  }
+  return axis === 'x' ? this.xRange : this.yRange;
+}
+
+// getter/setter for the axis
+//  for now this just gets/sets the axis type ('log' or 'linear')
+var axisType = function(axis, type) {
+  if ( arguments.length > 1 ) {
+    axis === 'x' ? this.xType = type : this.yType = type;
+  }
+  return axis === 'x' ? this.xType : this.yType;
+}
 
 // return the value for a given scale, checking if it is a number
 // d = the data item to locate, axis = 'x' or 'y'
@@ -94,7 +113,16 @@ var locate = function(d, axis) {
     datum = d[yField];
     scale = yScale;
   }
-  return $.isNumeric(datum) ? scale(datum) : domain(axis)[0];
+  // set to minimum of domain for non-numeric values
+  if ( ! $.isNumeric(datum) ) {
+    return domain(axis)[0];
+  }
+  // return the scaled value, unless it would be zero for log scales
+  // log(0) is negative infinity
+  else {
+    var scaledVal = scale(datum);
+    return ! $.isNumeric(scaledVal) ? domain(axis)[0] : scaledVal;
+  }
 };
 
 // return the color based on the current scale
@@ -124,18 +152,22 @@ d3.json('data/moviedata.json', function(json) {
 
   var axisPadding = 50; // for padding on the axis side
   var padding = 8;     // for padding opposite side of axis
-  var xRange = [0, w - axisPadding],
-      yRange = [h - axisPadding, 0];
 
   domain('x', xField);
+  range('x', 0, w - axisPadding);
   domain('y', yField);
+  range('y', h - axisPadding, 0);
 
+  axisType('x', 'linear');
   xScale = d3.scale.linear()
     .domain(domain('x'))
-    .range(xRange);
+    .range(range('x'))
+    .nice();
+  axisType('y', 'linear');
   yScale = d3.scale.linear()
     .domain(domain('y'))
-    .range(yRange);
+    .range(range('y'))
+    .nice();
 
   xAxis = d3.svg.axis()
     .scale(xScale)
@@ -397,6 +429,37 @@ $( function() {
     svg.select('#xLabel').text(xField);
     redraw();
   });
+
+  // listen for clicks to toggle linear (default) and log scales
+  $('#xaxis-scale').click(function() {
+    // if the scale is linear, toggle to log
+    if ( axisType('x') === 'linear' ) {
+      xScale = d3.scale.log()
+        .domain(domain('x'))
+        .range(range('x'))
+        .nice();
+      axisType('x', 'log');
+      $(this).html('(log)');
+    }
+    // else if the scale is log, toggle to linear
+    else {
+      xScale = d3.scale.linear()
+        .domain(domain('x'))
+        .range(range('x'))
+        .nice();
+      axisType('x', 'linear');
+      $(this).html('(linear)');
+    }
+
+    xScale.domain(domain('x'));
+    xAxis.scale(xScale);
+    svg.select('#xTicks')
+      .transition()
+        .duration(TRANSITION_DURATION)
+        .call(xAxis);
+    redraw();
+  });
+
   $('#yaxis').change(function() {
     yField = $('#yaxis').val();
     domain('y', yField);
@@ -406,6 +469,38 @@ $( function() {
     svg.select('#yLabel').text(yField);
     redraw();
   });
+
+  // listen for clicks to toggle linear (default) and log scales
+  $('#yaxis-scale').click(function() {
+    // if the scale is linear, toggle to log
+    if ( axisType('y') === 'linear' ) {
+      yScale = d3.scale.log()
+        .domain(domain('y'))
+        .range(range('y'))
+        .nice();
+      axisType('y', 'log');
+      $(this).html('(log)');
+    }
+    // else if the scale is log, toggle to linear
+    else {
+      yScale = d3.scale.linear()
+        .domain(domain('y'))
+        .range(range('y'))
+        .nice();
+      axisType('y', 'linear');
+      $(this).html('(linear)');
+    }
+
+    domain('y', yField, yDomain[0], yDomain[1]);
+    yScale.domain(domain('y'));
+    yAxis.scale(yScale);
+    svg.select('#yTicks')
+      .transition()
+        .duration(TRANSITION_DURATION)
+        .call(yAxis);
+    redraw();
+  });
+
   $('#color').change(function() {
     colorField = $('#color').val();
     colorScale = $.inArray(colorField, categoricalFields) >= 0 ? categoricalColorScale : numericColorScale.domain([d3.min(data, function(d) {return d[colorField];}), d3.sum(data, function(d) {return d[colorField];}) / data.length, d3.max(data, function(d) {return d[colorField];})]);
