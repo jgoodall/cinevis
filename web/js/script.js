@@ -147,8 +147,8 @@ d3.json('data/moviedata.json', function(json) {
   $('#color').val(colorField);
 
 
-  var w = $('#vis').width(),
-      h = $('#vis').height();
+  var w = $('#vispanel').width(),
+      h = $('#vispanel').height();
 
   var axisPadding = 50; // for padding on the axis side
   var padding = 8;     // for padding opposite side of axis
@@ -182,7 +182,7 @@ d3.json('data/moviedata.json', function(json) {
     .tickSize(-(w-axisPadding), 0, 0)
     .tickFormat(intFormat);
 
-  svg = d3.select('#vis')
+  svg = d3.select('#vispanel')
     .append('svg')
       .attr('width', w)
       .attr('height',h)
@@ -418,6 +418,39 @@ function redraw(filter) {
 
 // set up listeners when dom is ready
 $( function() {
+
+  // immediately show popover help text
+  $('#vispanel').twipsy( {trigger:'manual'} );
+  $('#vispanel').twipsy('show');
+
+  $('#controls').twipsy( {trigger:'manual'} );
+  $('#controls').twipsy('show');
+
+  $('#filters').twipsy( {trigger:'manual'} );
+  $('#filters').twipsy('show');
+
+  // hide tooltips after given timeout
+  setTimeout(function() {
+    $('#vispanel').twipsy('hide');
+    $('#controls').twipsy('hide');
+    $('#filters').twipsy('hide');
+  }, 8000);
+
+  // show tooltips again when user hovers on help icon (top right)
+  $('#helpIcon').hover(
+    // mouse in
+    function() {
+      $('#vispanel').twipsy('show');
+      $('#controls').twipsy('show');
+      $('#filters').twipsy('show');
+    },
+    // mouse out
+    function() {
+      $('#vispanel').twipsy('hide');
+      $('#controls').twipsy('hide');
+      $('#filters').twipsy('hide');
+    }
+  );
 
   // listen for changes to axis and color controls
   $('#xaxis').change(function() {

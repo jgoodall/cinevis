@@ -37,14 +37,23 @@
         <div class="container">
           <a class="brand" href="#">CineVis</a>
           <ul class="nav">
-            <li><a href="#description" onclick='$("#help").slideDown(750);'>
-              Help
-            </a></li>
-            <li><a href="#description" onclick='$("#data").slideDown(750);'>
-              Data
-            </a></li>
-            <li><a href="#description" onclick='$("#about").slideDown(750);'>
+            <li><a href="#description" onclick='
+                  $("#data").slideUp(750);
+                  $("#about").slideDown(750);
+                  $("#vispanel").twipsy("hide");
+                  $("#controls").twipsy("hide");
+                  $("#filters").twipsy("hide");
+                '>
               About
+            </a></li>
+            <li><a href="#description" onclick='
+                  $("#about").slideUp(750);
+                  $("#data").slideDown(750);
+                  $("#vispanel").twipsy("hide");
+                  $("#controls").twipsy("hide");
+                  $("#filters").twipsy("hide");
+                '>
+              Data
             </a></li>
           </ul>
         </div>
@@ -55,40 +64,20 @@
 
       <div class="content">
         <div class="page-header">
-          <h1>CineVis &nbsp; <small>Budgets, Revenues &amp; Ratings of Recent Films</small></h1>
+          <div class="row">
+            <h1 class="span15">CineVis &nbsp; <small> Explore Film Budgets, Revenues &amp; Ratings</small> </h1>
+            <h1 class="span1" id="helpIcon"><small>?</small></h1>
+          </div>
         </div>
 
         <div class="row">
           <div id="about" class="span14 offset1">
             <a class="close" href="#" onclick='$("#about").slideUp(750);'>×</a>
-            <h2>About the Author</h2>
-
-            <div>During the day John Goodall is a Research Scientist at <a href="http://computing.ornl.gov/cse/">ORNL</a> who spends his time working on visual analytics solutions for network security, health care, and other domains. But he also really likes movies. And baseball. </div>
-            <div>Find him on twitter where he posts about <a href="http://www.infovis-wiki.net/">infovis</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://nodejs.org/">node.js</a> and various other topics:
-            <a href='https://twitter.com/#!/johnrgoodall'>@johnrgoodall</a>
-            </div>
-            <h2>Technologies</h2>
-            <div>This project included the following libraries and technologies:
-            <ul>
-              <li><a href="http://mbostock.github.com/d3/">d3.js</a> : a javascript library for manipulating data and svg. (Mike Bostock <a href="https://twitter.com/#!/mbostock">@mbostock</a>)</li>
-              <li><a href="http://jquery.com/">jQuery</a> : for document traversal, event handling and more.
-              <li><a href="http://twitter.github.com/bootstrap/">Bootstrap</a> : a toolkit of css, html and javascript for typography, layout, navigation and more. (Twitter <a href="https://twitter.com/#!/TwBootstrap">@TwBootstrap</a>)</li>
-              <li><a href="http://html5boilerplate.com/">HTML5Boilerplate</a> : 'A rock-solid default for HTML5 awesome.' (<a href="https://twitter.com/#!/h5bp">@h5bp</a>)</li>
-              <li><a href="https://gist.github.com/1422879">This script</a> for initially merging H5BP and Bootstrap.</li>
-            </ul>
-            </div>
-            <br />
-
-            <div><a class="btn" id="aboutCloseBtn" href="#" onclick='$("#about").slideUp(750);'>
-              Close
-            </a></div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div id="help" class="span14 offset1">
-            <a class="close" href="#" onclick='$("#help").slideUp(750);'>×</a>
             <h2>What am I looking at?</h2>
+
+            <div>
+              <em>Hover over the '?' at the top right for more info.</em>
+            </div>
 
             <div>
               This plot shows financial and rating data about recent films. Each circle on the plot represents a film. Each axis can be set to represent a different data field using the menus on the right. The data field used to color the circles can also be set using the menus.
@@ -99,9 +88,29 @@
             <div>
               Hovering over a circle shows details of the film that the circle represents below the plot.
             </div>
+
+            <h2>Technologies</h2>
+
+            <div>This project included the following libraries and technologies:
+              <ul>
+                <li><a href="http://mbostock.github.com/d3/">d3.js</a> : a javascript library for manipulating data and svg. (Mike Bostock <a href="https://twitter.com/#!/mbostock">@mbostock</a>)</li>
+                <li><a href="http://jquery.com/">jQuery</a> : for document traversal, event handling and more.
+                <li><a href="http://twitter.github.com/bootstrap/">Bootstrap</a> : a toolkit of css, html and javascript for typography, layout, navigation and more. (Twitter <a href="https://twitter.com/#!/TwBootstrap">@TwBootstrap</a>)</li>
+                <li><a href="http://html5boilerplate.com/">HTML5Boilerplate</a> : 'A rock-solid default for HTML5 awesome.' (<a href="https://twitter.com/#!/h5bp">@h5bp</a>)</li>
+                <li><a href="https://gist.github.com/1422879">This script</a> for initially merging H5BP and Bootstrap.</li>
+              </ul>
+            </div>
+
+            <h2>About the Author</h2>
+
+            <div>During the day John Goodall is a Research Scientist at <a href="http://computing.ornl.gov/cse/">ORNL</a> who spends his time working on visual analytics solutions for network security, health care, and other domains. But he also really likes movies. And baseball. </div>
+            <div>Find him on twitter where he posts about <a href="http://www.infovis-wiki.net/">infovis</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://nodejs.org/">node.js</a> and various other topics:
+            <a href='https://twitter.com/#!/johnrgoodall'>@johnrgoodall</a>
+            </div>
+
             <br />
 
-            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#help").slideUp(750);'>
+            <div><a class="btn primary" id="aboutCloseBtn" href="#" onclick='$("#about").slideUp(750);'>
               Close
             </a></div>
           </div>
@@ -138,7 +147,7 @@
             </div>
 
             <br />
-            <div><a class="btn" id="helpCloseBtn" href="#" onclick='$("#data").slideUp(750);'>
+            <div><a class="btn primary" id="dataCloseBtn" href="#" onclick='$("#data").slideUp(750);'>
               Close
             </a></div>
           </div>
@@ -146,11 +155,11 @@
 
         <!-- Main Content -->
         <div class="row">
-          <div id="vis" class="span12"></div>
+          <div id="vispanel" class="span12" rel="twipsy" title="<div class='bigtwips'>Each circle represents a movie, positioned according to that movie's values on the two axes. <br /><br />Hover over a circle to see the details for that movie.</div>" data-placement="left" data-offset="-300" data-html="true"></div>
 
-          <div id="filters" class="span4">
+          <div id="filterpanel" class="span4">
 
-            <form class="form-stacked">
+            <form id="controls" class="form-stacked" rel="twipsy" title="<div class='bigtwips'>Adjust the axes and color fields that define the position and coloring of the circles.</div>" data-placement="left" data-offset="10" data-html="true">
               <fieldset>
 
                 <div class="clearfix">
@@ -213,7 +222,7 @@
               </fieldset>
             </form>
 
-            <div class="clearfix">
+            <div id="filters" class="clearfix" rel="twipsy" title="<div class='bigtwips'>Filter movies to only show the ones that are between the sliders for all filters. <br /><br />The display will automatically be zoomed to show only the movies that match filters.</div>" data-placement="left" data-offset="10" data-html="true">
 
               <div class="slider-container">
                 <span class="slider-label">Profitability</span>
@@ -359,6 +368,7 @@
 
 
   <!-- scripts concatenated and minified via build script -->
+  <script defer src="js/mylibs/bootstrap-twipsy.js"></script>
   <script defer src="js/mylibs/d3.js"></script>
   <script defer src="js/plugins.js"></script>
   <script defer src="js/script.js"></script>

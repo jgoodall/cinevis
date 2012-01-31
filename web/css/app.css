@@ -26,18 +26,18 @@ body {
 
 /* Page header tweaks */
 .page-header {
-  background-color: #fafafa;
+  background-color: #f6f6f9;
   padding: 10px 10px 0px;
   margin: -10px -10px 0px;
 }
 
-/*
-Visualizations
-*/
-
-#help, #data, #about {
+#data, #about {
   display: none;
-  padding-bottom: 15px;
+  padding: 10px 0px;
+}
+
+#data, #about div {
+  padding-bottom: 6px;
 }
 
 .term-name {
@@ -45,11 +45,29 @@ Visualizations
   font-weight: 600;
 }
 
-#vis, #filters {
+#vispanel, #filterpanel {
   height: 700px;
 }
 
-#filters {
+/* large twipsy */
+.bigtwips {
+  padding: 15px;
+  font-size: 16px;
+  text-align: left;
+}
+
+/* question mark to hover over to see tooltips */
+#helpIcon {
+  background-color: #fff;
+  border: 1px solid #999;
+  margin: -2px -5px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  cursor: default;
+}
+
+#filterpanel {
   padding: 0px 12px;
   margin: 0px -20px 0px 0px;
   -webkit-border-radius: 0 0 6px 6px;
@@ -110,6 +128,11 @@ Visualizations
   color: #333;
   font-size: 12px;
 }
+
+/*
+vispanelualizations
+*/
+
 
 /* Field name on the axis */
 .axisTitle {
