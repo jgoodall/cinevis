@@ -419,22 +419,10 @@ function redraw(filter) {
 // set up listeners when dom is ready
 $( function() {
 
-  // immediately show popover help text
+  // set up twipsy large quick start
   $('#vispanel').twipsy( {trigger:'manual'} );
-  $('#vispanel').twipsy('show');
-
   $('#controls').twipsy( {trigger:'manual'} );
-  $('#controls').twipsy('show');
-
   $('#filters').twipsy( {trigger:'manual'} );
-  $('#filters').twipsy('show');
-
-  // hide tooltips after given timeout
-  setTimeout(function() {
-    $('#vispanel').twipsy('hide');
-    $('#controls').twipsy('hide');
-    $('#filters').twipsy('hide');
-  }, 8000);
 
   // show tooltips again when user hovers on help icon (top right)
   $('#helpIcon').hover(
@@ -451,6 +439,12 @@ $( function() {
       $('#filters').twipsy('hide');
     }
   );
+
+  // immediately show popover help text, then hide after timeout
+  $('#helpIcon').twipsy( {trigger:'manual'} );
+  $('#helpIcon').twipsy('show');
+  setTimeout(function() { $('#helpIcon').twipsy('hide'); }, 4000);
+
 
   // listen for changes to axis and color controls
   $('#xaxis').change(function() {
