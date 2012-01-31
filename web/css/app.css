@@ -4,10 +4,6 @@ html, body {
   font-size: 13px;
 }
 
-body {
-  padding-top: 40px;
-}
-
 /* The white background content wrapper */
 .content {
   background-color: #fff;
@@ -28,12 +24,7 @@ body {
   margin: -10px -10px 0px;
 }
 
-#data, #about {
-  display: none;
-  padding: 10px 0px;
-}
-
-#data, #about div {
+#textpanel div {
   padding-bottom: 6px;
 }
 

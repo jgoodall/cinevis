@@ -32,34 +32,6 @@
 <body>
   <div role="main">
 
-    <div class="topbar">
-      <div class="fill">
-        <div class="container">
-          <a class="brand" href="#">CineVis</a>
-          <ul class="nav">
-            <li><a href="#description" onclick='
-                  $("#data").slideUp(750);
-                  $("#about").slideDown(750);
-                  $("#vispanel").twipsy("hide");
-                  $("#controls").twipsy("hide");
-                  $("#filters").twipsy("hide");
-                '>
-              About
-            </a></li>
-            <li><a href="#description" onclick='
-                  $("#about").slideUp(750);
-                  $("#data").slideDown(750);
-                  $("#vispanel").twipsy("hide");
-                  $("#controls").twipsy("hide");
-                  $("#filters").twipsy("hide");
-                '>
-              Data
-            </a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
     <div class="container">
 
       <div class="content">
@@ -71,100 +43,15 @@
           </div>
         </div>
 
-        <div class="row">
-          <div id="about" class="span14 offset1">
-            <a class="close" href="#" onclick='$("#about").slideUp(750);'>×</a>
-            <h2>What am I looking at?</h2>
 
-            <div>
-              <em>Hover over the '?' at the top right for quick start.</em>
-            </div>
-
-            <div>
-              This plot shows financial and rating data about recent films. Each circle on the plot represents a film. Each axis can be set to represent a different data field using the menus on the right. The data field used to color the circles can also be set using the menus.
-            </div>
-            <div>
-              Filters for most of the data fields are also shown at the right. Adjusting the filters changes the data shown on the screen. As data is limited the visible circles will automatically be zoomed in to show only the films that match the current filters.
-            </div>
-            <div>
-              Hovering over a circle shows details of the film that the circle represents below the plot.
-            </div>
-            <div>
-              Please report problems, comments and issues on the <a href="https://github.com/jgoodall/cinevis/issues">github project page</a>.
-            </div>
-
-            <h2>Technologies</h2>
-
-            <div>This project included the following libraries and technologies:
-              <ul>
-                <li><a href="http://mbostock.github.com/d3/">d3.js</a> : a javascript library for manipulating data and svg. (Mike Bostock <a href="https://twitter.com/#!/mbostock">@mbostock</a>)</li>
-                <li><a href="http://jquery.com/">jQuery</a> : for document traversal, event handling and more.
-                <li><a href="http://twitter.github.com/bootstrap/">Bootstrap</a> : a toolkit of css, html and javascript for typography, layout, navigation and more. (Twitter <a href="https://twitter.com/#!/TwBootstrap">@TwBootstrap</a>)</li>
-                <li><a href="http://html5boilerplate.com/">HTML5Boilerplate</a> : 'A rock-solid default for HTML5 awesome.' (<a href="https://twitter.com/#!/h5bp">@h5bp</a>)</li>
-                <li><a href="https://gist.github.com/1422879">This script</a> for initially merging H5BP and Bootstrap.</li>
-              </ul>
-            </div>
-
-            <h2>About the Author</h2>
-
-            <div>During the day John Goodall is a Research Scientist at <a href="http://computing.ornl.gov/cse/">ORNL</a> who spends his days puzzling out how visual analytics can be applied to solve various problems. </div>
-            <div>Find him on twitter where he posts about <a href="http://www.infovis-wiki.net/">infovis</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://nodejs.org/">node.js</a> and various other topics:
-            <a href='https://twitter.com/#!/johnrgoodall'>@johnrgoodall</a>
-            </div>
-
-            <br />
-
-            <div><a class="btn primary" id="aboutCloseBtn" href="#" onclick='$("#about").slideUp(750);'>
-              Close
-            </a></div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div id="data" class="span14 offset1">
-            <a class="close" href="#" onclick='$("#data").slideUp(750);'>×</a>
-            <h2>Data</h2>
-
-            <div>The data includes most films from 2008-2011. The data includes the following fields:
-              <ul>
-                <li><span class="term-name">Profitability</span> : Percent of budget recovered</li>
-                <li><span class="term-name">Budget</span> : Cost, in millions US Dollars</li>
-                <li><span class="term-name">Opening Weekend Theaters</span> : Number of Theaters in US Opening Weekend</li>
-                <li><span class="term-name">Opening Weekend Revenue</span> : Revenue, in millions US Dollars</li>
-                <li><span class="term-name">Opening Weekend per Cinema</span> : Average per cinema on opening weekend, in US Dollars</li>
-                <li><span class="term-name">Worldwide Gross</span> : Total revenue, in millions US Dollars</li>
-                <li><span class="term-name">Domestic Gross</span> : US revenue, in millions US Dollars</li>
-                <li><span class="term-name">Foreign Gross</span> : non-US revenue, in millions US Dollars</li>
-                <li><span class="term-name">Audience Rating</span> : Average audience score from <a href="http://www.rottentomatoes.com/">Rotten Tomatoes</a>, score: 1-100</li>
-                <li><span class="term-name">Critic Rating</span> : Average meta score of critical reviews from <a href="http://www.rottentomatoes.com/">Rotten Tomatoes</a>, score: 1-100 </li>
-                <li><span class="term-name">Oscar</span> : Names of Academy Award categories</li>
-                <li><span class="term-name">Studio</span> : Name of the lead studio</li>
-                <li><span class="term-name">Genre</span> : Name of the genre from <a href="www.imdb.coml">IMDB</a></li>
-                <li><span class="term-name">Story</span> : Name of the <a href="http://infobawards.s3.amazonaws.com/hollywood_plots.pdf">story type</a></li>
-              </ul>
-            </div>
-
-            <div>The <a href="http://bit.ly/hollywoodbudgets">data set</a> is from the in the <a href="http://www.informationisbeautifulawards.com/2012/01/challenge-of-the-stars/">Information is Beautiful 'Hollywood Budgets' Challenge</a>. The data was pruned to remove films marked 'exclude'. The sources for budget data is <a href="http://www.the-numbers.com/movies/records/allbudgets.php">TheNumbers.com</a> and <a href="http://www.boxofficemojo.com/">BoxOfficeMojo.com</a>.</div>
-
-            <br />
-            <div><strong><a href="./data/moviedata.json">Download the JSON data</a></strong>
-            </div>
-
-            <br />
-            <div><a class="btn primary" id="dataCloseBtn" href="#" onclick='$("#data").slideUp(750);'>
-              Close
-            </a></div>
-          </div>
-        </div>
-
-        <!-- Main Visualization and Details -->
+        <!-- Main Visualization and Details Row -->
         <div class="row">
 
           <!-- Main Visualization -->
           <div id="vispanel" class="span12" rel="twipsy" title="<div class='bigtwips'>Each circle represents a movie, positioned according to that movie's values on the two axes. <br /><br />The display will automatically zoom to show only the movies that match the filters." data-placement="above" data-offset="-400" data-html="true"></div>
 
           <!-- Details on Hovering -->
-          <div id="detailpanel" class="span4" rel="twipsy" title="<div class='bigtwips'>Hover over a circle to see the details for that movie.</div>" data-placement="left" data-offset="-80" data-html="true">
+          <div id="detailpanel" class="span4" rel="twipsy" title="<div class='bigtwips'>Hover over a circle to see the details for that movie.</div>" data-placement="left" data-offset="-20" data-html="true">
             <div id="details">
 
               <div id="detail-title">
@@ -191,7 +78,7 @@
                 <dt class="detail-name">Opening Weekend Revenue</dt>
                 <dd id="detail-openingweekend-value" class="detail-value"></dd>
 
-                <dt class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</dt>
+                <dt class="detail-name">Opening Weekend Theaters</dt>
                 <dd id="detail-theatres-value" class="detail-value"></dd>
 
                 <dt class="detail-name">Opening Weekend per Cinema</dt>
@@ -219,17 +106,16 @@
             </div>
           </div>
 
+        </div> <!-- End Main Visualization and Details Row -->
 
-        </div>
 
-
-        <!-- Color Legend -->
+        <!-- Color Legend Row -->
         <div class="row">
           <div id="colorpanel" class="span16"></div>
-        </div>
+        </div> <!-- End Color Legend Row -->
 
 
-        <!-- Filters and Controls -->
+        <!-- Filters and Controls Row -->
         <div id="filterpanel" class="row">
 
           <!-- Controls -->
@@ -298,6 +184,7 @@
             </form>
           </div>
 
+
           <div id="filters" class="span12 offset1" rel="twipsy" title="<div class='bigtwips'>Filter movies to only show the ones that are between the sliders for all filters.</div>" data-placement="above" data-offset="20" data-html="true">
 
             <div class="row">
@@ -354,7 +241,83 @@
             </div>
           </div>
 
-        </div>
+        </div>  <!-- End Filters and Controls Row -->
+
+
+        <!-- About and help Row -->
+        <div id="textpanel" class="row">
+
+          <div id="help" class="span4">
+            <h3>What am I looking at?</h3>
+
+            <div>
+              <em>Hover over the '?' at the top right for quick start.</em>
+            </div>
+            <br />
+
+            <div>
+              This plot shows financial and rating data about recent films. Each circle on the plot represents a film. Each axis can be set to represent a different data field using the menus on the right. The data field used to color the circles can also be set using the menus.
+            </div>
+            <div>
+              Filters for most of the data fields are also shown at the right. Adjusting the filters changes the data shown on the screen. As data is limited the visible circles will automatically be zoomed in to show only the films that match the current filters.
+            </div>
+            <div>
+              Hovering over a circle shows details of the film that the circle represents below the plot.
+            </div>
+            <div>
+              Please report problems, comments and issues on the <a href="https://github.com/jgoodall/cinevis/issues">project page</a>.
+            </div>
+          </div>
+
+          <div id="data" class="span7">
+            <h3>About the Data</h3>
+
+            <div>The data includes films from 2008-2011. The <a href="http://bit.ly/hollywoodbudgets">data set</a> is from the in the <a href="http://www.informationisbeautifulawards.com/2012/01/challenge-of-the-stars/">Information is Beautiful 'Hollywood Budgets' Challenge</a>. The data was pruned to remove films marked 'exclude'.
+
+              <ul>
+                <li><span class="term-name">Profitability</span> : Percent of budget recovered</li>
+                <li><span class="term-name">Budget</span> : Cost, in millions US Dollars</li>
+                <li><span class="term-name">Worldwide Gross</span> : Total revenue, in millions US Dollars</li>
+                <li><span class="term-name">Domestic Gross</span> : US revenue, in millions US Dollars</li>
+                <li><span class="term-name">Foreign Gross</span> : non-US revenue, in millions US Dollars</li>
+                <li><span class="term-name">Opening Weekend Theaters</span> : Number of Theaters in US Opening Weekend</li>
+                <li><span class="term-name">Opening Weekend Revenue</span> : Revenue, in millions US Dollars</li>
+                <li><span class="term-name">Opening Weekend per Cinema</span> : Average per cinema on opening weekend, in US Dollars</li>
+                <li><span class="term-name">Audience Rating</span> : Average audience score from <a href="http://www.rottentomatoes.com/">Rotten Tomatoes</a>, score: 1-100</li>
+                <li><span class="term-name">Critic Rating</span> : Average meta score of critical reviews from <a href="http://www.rottentomatoes.com/">Rotten Tomatoes</a>, score: 1-100 </li>
+                <li><span class="term-name">Studio</span> : Name of the lead studio</li>
+                <li><span class="term-name">Story</span> : Name of the <a href="http://infobawards.s3.amazonaws.com/hollywood_plots.pdf">story type</a></li>
+                <li><span class="term-name">Genre</span> : Name of the genre from <a href="www.imdb.coml">IMDB</a></li>
+                <li><span class="term-name">Oscar</span> : Names of Academy Award categories</li>
+              </ul>
+            </div>
+
+            <div><strong><a href="./data/moviedata.json">Download the JSON movie data</a></strong>
+            </div>
+          </div>
+
+          <div id="about" class="span5">
+            <h3>Technologies Used</h3>
+
+            <div>This project included the following libraries and technologies:
+              <ul>
+                <li><a href="http://mbostock.github.com/d3/">d3.js</a> : a javascript library for manipulating data and svg. (Mike Bostock <a href="https://twitter.com/#!/mbostock">@mbostock</a>)</li>
+                <li><a href="http://jquery.com/">jQuery</a> : for document traversal, event handling and more.
+                <li><a href="http://twitter.github.com/bootstrap/">Bootstrap</a> : a toolkit of css, html and javascript for typography, layout, navigation and more. (Twitter <a href="https://twitter.com/#!/TwBootstrap">@TwBootstrap</a>)</li>
+                <li><a href="http://html5boilerplate.com/">HTML5Boilerplate</a> : 'A rock-solid default for HTML5 awesome.' (<a href="https://twitter.com/#!/h5bp">@h5bp</a>)</li>
+                <li><a href="https://gist.github.com/1422879">This script</a> for initially merging H5BP and Bootstrap.</li>
+              </ul>
+            </div>
+
+            <h3>About the Author</h3>
+
+            <div>During the day John Goodall is a Research Scientist at <a href="http://computing.ornl.gov/cse/">ORNL</a> who spends his days puzzling out how visual analytics can be applied to solve various problems. </div>
+            <div>Find him on twitter where he posts about <a href="http://www.infovis-wiki.net/">infovis</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://nodejs.org/">node.js</a> and various other topics:
+            <a href='https://twitter.com/#!/johnrgoodall'>@johnrgoodall</a>
+            </div>
+          </div>
+
+        </div> <!-- About and help Row -->
 
 
       </div> <!-- content -->
