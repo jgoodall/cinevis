@@ -4,13 +4,11 @@
 # Vis
   * Color legend
   * Filter by year (bar chart)
-  * Filter by story (list)
-  * Filter by genre (list)
   * Show std deviations on axes/background
   * Show only anomalies (more than 1 std dev for each axis)
-  * Click to select and show details for multiple films
 
 # Bugs
+  * tick scale always uses intFormat
   * reset filters when changing axes - something like
      d3.selectAll('circle').each(function(d) {d.display = true;});
   * REMOVE GLOBAL VARS
