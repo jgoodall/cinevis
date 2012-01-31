@@ -150,8 +150,8 @@ d3.json('data/moviedata.json', function(json) {
   var w = $('#vispanel').width(),
       h = $('#vispanel').height();
 
-  var axisPadding = 50; // for padding on the axis side
-  var padding = 8;     // for padding opposite side of axis
+  var axisPadding = 54; // for padding on the axis side
+  var padding = 10;     // for padding opposite side of axis
 
   domain('x', xField);
   range('x', 0, w - axisPadding);
