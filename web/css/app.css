@@ -104,29 +104,37 @@ body {
 }
 
 #details-container {
-  height: 120px;
+  padding-top: 10px;
 }
 
 #details {
   display: none;
 }
 
+#detail-title {
+  padding: 15px 0px;
+}
+
+#detail-list dd {
+  padding-bottom: 4px;
+}
+
 #detail-film-value {
   color: #333;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   padding-right: 15px;
 }
 
 .detail-name {
   color: #999;
-  font-size: 11px;
+  font-size: 12px;
   padding-right: 10px;
 }
 
 .detail-value {
   color: #333;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 /*

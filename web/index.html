@@ -153,13 +153,83 @@
           </div>
         </div>
 
-        <!-- Main Content -->
+        <!-- Main Visualization and Details -->
         <div class="row">
+
+          <!-- Main Visualization -->
           <div id="vispanel" class="span12" rel="twipsy" title="<div class='bigtwips'>Each circle represents a movie, positioned according to that movie's values on the two axes. <br /><br />Hover over a circle to see the details for that movie.</div>" data-placement="left" data-offset="-300" data-html="true"></div>
 
-          <div id="filterpanel" class="span4">
+          <!-- Details on Hovering -->
+          <div id="details-container" class="span4">
+            <div id="details">
 
-            <form id="controls" class="form-stacked" rel="twipsy" title="<div class='bigtwips'>Adjust the axes and color fields that define the position and coloring of the circles.</div>" data-placement="left" data-offset="10" data-html="true">
+              <div id="detail-title">
+                <span id="detail-film-value"></span>
+                <span id="detail-year-value"></span>
+              </div>
+
+              <dl id="detail-list">
+                <dt class="detail-name">Profitability</dt>
+                <dd id="detail-profitability-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Budget</dt>
+                <dd id="detail-budget-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Worldwide Gross</dt>
+                <dd id="detail-worldwide-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Domestic Gross</dt>
+                <dd id="detail-domestic-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Foreign Gross</dt>
+                <dd id="detail-foreign-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Opening Weekend Revenue</dt>
+                <dd id="detail-openingweekend-value" class="detail-value"></dd>
+
+                <dt class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</dt>
+                <dd id="detail-theatres-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Opening Weekend per Cinema</dt>
+                <dd id="detail-avgcinema-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Audience Rating</dt>
+                <dd id="detail-audience-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Critic Rating</dt>
+                <dd id="detail-rotten-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Studio</dt>
+                <dd id="detail-studio-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Story</dt>
+                <dd id="detail-story-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Genre</dt>
+                <dd id="detail-genre-value" class="detail-value"></dd>
+
+                <dt class="detail-name">Oscar</dt>
+                <dd id="detail-oscar-value" class="detail-value"></dd>
+              </dl>
+
+            </div>
+          </div>
+
+
+        </div>
+
+
+        <!-- Color Legend -->
+        <div class="row">
+          <div id="colorpanel" class="span16"></div>
+        </div>
+
+
+        <!-- Filters and Controls -->
+        <div class="row">
+          <div id="filterpanel" class="span16">
+
+            <form id="controls" class="form-stacked" rel="twipsy" title="<div class='bigtwips'>Adjust the axes and color fields that define the position and coloring of the circles.</div>" data-placement="above" data-offset="60" data-html="true">
               <fieldset>
 
                 <div class="clearfix">
@@ -256,103 +326,10 @@
 
             </div><!-- /clearfix -->
 
-
           </div>
         </div>
 
-        <!-- Details of selections -->
-        <div class="row">
-          <div id="details-container" class="span16">
-            <div id="details">
 
-              <div class="row">
-                <div class="span16">
-                  <span id="detail-film-value"></span>
-                  <span id="detail-year-value"></span>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="span6">
-                  <span class="detail-name">Budget</span>
-                  <span id="detail-budget-value" class="detail-value"></span>
-                </div>
-
-                <div class="span5">
-                  <span class="detail-name">Profitability</span>
-                  <span id="detail-profitability-value" class="detail-value"></span>
-                </div>
-
-                <div class="span5">
-                  <span class="detail-name">Audience Rating</span>
-                  <span id="detail-audience-value" class="detail-value"></span>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="span6">
-                  <span class="detail-name">Opening Weekend Revenue</span>
-                  <span id="detail-openingweekend-value" class="detail-value"></span>
-                </div>
-
-                <div class="span5">
-                  <span class="detail-name">Worldwide Gross</span>
-                  <span id="detail-worldwide-value" class="detail-value"></span>
-                </div>
-
-                <div class="span5">
-                  <span class="detail-name">Critic Rating</span>
-                  <span id="detail-rotten-value" class="detail-value"></span>
-                </div>
-
-              </div>
-
-              <div class="row">
-                <div class="span6"><span class="detail-name" text="Number of US Theaters on Opening Weekend">Opening Weekend Theaters</span>
-                <span id="detail-theatres-value" class="detail-value"></span>
-                </div>
-
-                <div class="span5"><span class="detail-name">Domestic Gross</span>
-                <span id="detail-domestic-value" class="detail-value"></span>
-                </div>
-
-                <div class="span5"><span class="detail-name">Story</span>
-                <span id="detail-story-value" class="detail-value"></span>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="span6">
-                  <span class="detail-name">Opening Weekend per Cinema</span>
-                  <span id="detail-avgcinema-value" class="detail-value"></span>
-                </div>
-
-                <div class="span5">
-                  <span class="detail-name">Foreign Gross</span>
-                  <span id="detail-foreign-value" class="detail-value"></span>
-                </div>
-
-                <div class="span5">
-                  <span class="detail-name">Genre</span>
-                  <span id="detail-genre-value" class="detail-value"></span>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="span6">
-                  <span class="detail-name">Studio</span>
-                  <span id="detail-studio-value" class="detail-value"></span>
-                </div>
-
-                <div class="span10">
-                  <span class="detail-name">Oscar</span>
-                  <span id="detail-oscar-value" class="detail-value"></span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
 
       </div>
 
