@@ -32,7 +32,7 @@ var xScale, yScale,
 
 // build the array of filters to be populated when filters are set
 var allFilters = [];
-$.each(['Profitability', 'Budget', 'Worldwide Gross', 'Audience Rating', 'Critic Rating'], function(index, value) {
+$.each(['Profitability', 'Budget', 'Worldwide Gross', 'Domestic Gross', 'Foreign Gross', 'Audience Rating', 'Critic Rating'], function(index, value) {
   allFilters.push( {field: value, min:-1, max:-1} );
 });
 
@@ -138,6 +138,8 @@ d3.json('data/moviedata.json', function(json) {
   setupSliders('#profit-slider', '#profit-slider-text', percentFormat, 'Profitability');
   setupSliders('#budget-slider', '#budget-slider-text', intFormat, 'Budget', {prepend:'$', append:' M'});
   setupSliders('#wgross-slider', '#wgross-slider-text', intFormat, 'Worldwide Gross', {prepend:'$', append:' M'});
+  setupSliders('#dgross-slider', '#dgross-slider-text', intFormat, 'Domestic Gross', {prepend:'$', append:' M'});
+  setupSliders('#fgross-slider', '#fgross-slider-text', intFormat, 'Foreign Gross', {prepend:'$', append:' M'});
   setupSliders('#arating-slider', '#arating-slider-text', intFormat, 'Audience Rating', {min: 0, max: 100});
   setupSliders('#crating-slider', '#crating-slider-text', intFormat, 'Critic Rating', {min: 0, max: 100});
 

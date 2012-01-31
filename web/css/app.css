@@ -7,10 +7,6 @@ body {
   padding-top: 40px;
 }
 
-.container > footer p {
-  text-align: center; /* center align it with the container */
-}
-
 /* The white background content wrapper */
 .content {
   background-color: #fff;
@@ -45,7 +41,7 @@ body {
   font-weight: 600;
 }
 
-#vispanel, #filterpanel {
+#vispanel, #detailpanel {
   height: 700px;
 }
 
@@ -74,8 +70,7 @@ body {
 }
 
 #filterpanel {
-  padding: 0px 12px;
-  margin: 0px -20px 0px 0px;
+  padding-bottom: 10px;
 }
 
 /* link to toggle between linear and log scale */
@@ -87,24 +82,22 @@ body {
 
 .slider-container {
   text-align: left;
-  padding-top: 10px;
+  padding-top: 8px;
 }
 
 .slider-label {
-  width: 160px;
-  margin-right: 19px;
+  margin-right: 25px;
 }
 
 .slider-value {
-  width: 90px;
+  width: 100px;
   border: 0;
   color: #999;
   font-size: 11px;
-  text-align: right;
 }
 
-#details-container {
-  padding-top: 10px;
+#detailpanel {
+
 }
 
 #details {
