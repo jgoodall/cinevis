@@ -423,6 +423,7 @@ $( function() {
 
   // set up twipsy large quick start
   $('#vispanel').twipsy( {trigger:'manual'} );
+  $('#detailpanel').twipsy( {trigger:'manual'} );
   $('#controls').twipsy( {trigger:'manual'} );
   $('#filters').twipsy( {trigger:'manual'} );
 
@@ -431,12 +432,14 @@ $( function() {
     // mouse in
     function() {
       $('#vispanel').twipsy('show');
+      $('#detailpanel').twipsy('show');
       $('#controls').twipsy('show');
       $('#filters').twipsy('show');
     },
     // mouse out
     function() {
       $('#vispanel').twipsy('hide');
+      $('#detailpanel').twipsy('hide');
       $('#controls').twipsy('hide');
       $('#filters').twipsy('hide');
     }
