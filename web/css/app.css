@@ -1,5 +1,5 @@
 html, body {
-  background-color: #8EA19F;
+  background-color: #f0edda;
   font-size: 13px;
 }
 
@@ -26,7 +26,7 @@ body {
 
 /* Page header tweaks */
 .page-header {
-  background-color: #f6f6f9;
+  background-color: #f6f6f6;
   padding: 10px 10px 0px;
   margin: -10px -10px 0px;
 }
