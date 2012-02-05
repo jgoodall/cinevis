@@ -37,6 +37,10 @@ html, body {
   height: 700px;
 }
 
+#colorpanel {
+  height: 25px;
+}
+
 /* large twipsy */
 .bigtwips {
   padding: 20px;

@@ -1,13 +1,9 @@
 /*
   TODO LIST
 
-# Vis
-  * Color legend
-  * Filter by year (bar chart)
-  * Show std deviations on axes/background
-  * Show only anomalies (more than 1 std dev for each axis)
-
 # Bugs
+  * format colorlegend values
+  * use nice values for colorlegend numeric scales
   * tick scale always uses intFormat
   * reset filters when changing axes - something like
      d3.selectAll('circle').each(function(d) {d.display = true;});
@@ -34,25 +30,23 @@ $.each(['Profitability', 'Budget', 'Worldwide Gross', 'Domestic Gross', 'Foreign
   allFilters.push( {field: value, min:-1, max:-1} );
 });
 
-// color: scales for numeric fields
-var redBlue = ["rgb(103, 0, 31)", "rgb( 178, 24, 43)", "rgb( 214, 96, 77)", "rgb( 244, 165, 130)", "rgb( 253, 219, 199)", "rgb( 209, 229, 240)", "rgb( 146, 197, 222)", "rgb( 67, 147, 195)", "rgb( 33, 102, 172)", "rgb( 5, 48, 97)"];
-var brownBlueGreen = ["rgb(84, 48, 5)", "rgb( 140, 81, 10)", "rgb( 191, 129, 45)", "rgb( 223, 129, 125)", "rgb( 246, 232, 195)", "rgb( 199, 234, 229)", "rgb( 128, 205, 193)", "rgb( 53, 151, 143)", "rgb( 1, 102, 94)", "rgb( 0, 60, 48)"];
-var purpleGreen = ["rgb(64, 0, 75)", "rgb( 118, 42, 131)", "rgb( 153, 112, 171)", "rgb( 194, 165, 207)", "rgb( 231, 212, 232)", "rgb( 217, 240, 211)", "rgb( 166, 219, 160)", "rgb( 90, 174, 97)", "rgb( 27, 120, 55)", "rgb( 0, 68, 27)"];
-var redYellowBlue = ["rgb(165, 0, 38)", "rgb( 215, 48, 39)", "rgb( 244, 109, 67)", "rgb( 253, 174, 97)", "rgb( 254, 224, 144)", "rgb( 224, 243, 248)", "rgb( 171, 217, 233)", "rgb( 116, 173, 209)", "rgb( 69, 117, 180)", "rgb( 49, 54, 149)"];
-var purpleOrange = ["rgb(127, 59, 8)", "rgb( 179, 88, 6)", "rgb( 224, 130, 20)", "rgb( 253, 184, 99)", "rgb( 254, 224, 182)", "rgb( 216, 218, 235)", "rgb( 178, 171, 210)", "rgb( 128, 115, 172)", "rgb( 84, 39, 136)", "rgb( 45, 0, 75)"];
-var palettes = [redBlue, brownBlueGreen, purpleGreen, redYellowBlue, purpleOrange],
-    currentPaletteIndex = 0,
-    currentPalette = palettes[currentPaletteIndex];
+// color scales
+var genreColorScale = d3.scale.category20();
+var storyColorScale = d3.scale.category20b(); // TODO - change to use colors in pdf
+// red - gray - blue [min - avg - max]
+var quantileColorScale = [
+    "rgb(103, 0, 31)", "rgb( 178, 24, 43)", "rgb( 214, 96, 77)", "rgb( 244, 165, 130)", 
+    "rgb( 220, 220, 220)",
+    "rgb( 146, 197, 222)", "rgb( 67, 147, 195)", "rgb( 33, 102, 172)", "rgb( 5, 48, 97)"
+      ];
 
+// must set domain of numeric scale: domain([minVal, mean, maxVal])
+var numericColorScale = d3.scale.quantile().range(quantileColorScale);
+// default to story for color
 var colorField = 'Story';
-var categoricalFields = ['Story', 'Genre', 'Lead Studio'];
-var categoricalColorScale = d3.scale.category20c();
-// need to set domain of numeric scale: domain([minVal, mean, maxVal])
-var numericColorScale = d3.scale.quantile().range(currentPalette);
-var colorScale = $.inArray(colorField, categoricalFields) >= 0 ? categoricalColorScale : numericColorScale;
+var colorScale = storyColorScale;
 
 
-// TODO - these probably shouldnt be globals
 var data;     // the main film data structure
 var averages; // {year: {field: avg,..}, ..}
 var svg;
@@ -158,6 +152,11 @@ d3.json('data/moviedata.json', function(json) {
   domain('y', yField);
   range('y', h - axisPadding, 0);
 
+  // set up color legend
+  var uniqVals = d3.keys( d3.nest().key( function(d) {return (d[colorField]).toLowerCase();} ).sortKeys().map(data)); // case sensitive!
+  colorScale.domain( uniqVals );
+  colorlegend("#colorpanel", colorScale, "ordinal", {fill: true});
+  
   axisType('x', 'linear');
   xScale = d3.scale.linear()
     .domain(domain('x'))
@@ -533,8 +532,34 @@ $( function() {
 
   $('#color').change(function() {
     colorField = $('#color').val();
-    colorScale = $.inArray(colorField, categoricalFields) >= 0 ? categoricalColorScale : numericColorScale.domain([d3.min(data, function(d) {return d[colorField];}), d3.sum(data, function(d) {return d[colorField];}) / data.length, d3.max(data, function(d) {return d[colorField];})]);
-    // TODO - update color legend
+    var scaleType;
+    
+    if ( colorField === 'Story' ) {
+      var uniqVals = d3.keys( d3.nest().key( function(d) {
+          return (d[colorField]).toLowerCase();
+        } ).sortKeys().map(data));
+      colorScale = storyColorScale.domain( uniqVals );
+      scaleType = 'ordinal';
+    }
+    else if ( colorField === 'Genre' ) {
+      var uniqVals = d3.keys( d3.nest().key( function(d) {
+          return (d[colorField]).toLowerCase();
+        } ).sortKeys().map(data));
+      colorScale = genreColorScale.domain( uniqVals );
+      scaleType = 'ordinal';
+    }
+    else {
+      colorScale = numericColorScale.domain([
+          d3.min(data, function(d) {return d[colorField];}), 
+          d3.sum(data, function(d) {return d[colorField];}) / data.length, 
+          d3.max(data, function(d) {return d[colorField];})]);
+      scaleType = 'quantile';
+    }
+
+    $('#colorpanel').html(''); // clear the old legend
+    
+    colorlegend('#colorpanel', colorScale, scaleType, {fill: true});
+  
     redraw();
   });
 
