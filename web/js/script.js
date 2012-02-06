@@ -1,16 +1,11 @@
 /*
   TODO LIST
-
-# Bugs
+  * fix colorlegend story - use two rows
   * format colorlegend values
   * use nice values for colorlegend numeric scales
   * tick scale always uses intFormat
   * reset filters when changing axes - something like
      d3.selectAll('circle').each(function(d) {d.display = true;});
-  * REMOVE GLOBAL VARS
-  * Paranormal Activity (2009) is not being included in result data set
-  * fix profitability in data when no budget data is available (change to 0?)
-
 */
 
 // ensure that all transitions are on the same timing
