@@ -4,6 +4,7 @@
   * format colorlegend values
   * use nice values for colorlegend numeric scales
   * tick scale always uses intFormat
+  * Paranormal activity throws off everything in profitability
   * reset filters when changing axes - something like
      d3.selectAll('circle').each(function(d) {d.display = true;});
 */
