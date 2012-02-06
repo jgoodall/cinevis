@@ -125,14 +125,18 @@ colorlegend = function(target, scale, type, options) {
       .attr('x', function(d,i) {return i * (boxWidth+boxSpacing) + (boxWidth/2);} )
       .attr('y', boxHeight+2)
       .attr('dy', '.71em')
-      .style('font-size', '9px')
+      .style('font-size', '8.5px')
       .style('fill', '#666')
       .style('text-anchor', 'middle')
       .style('pointer-events', 'none')
       .text(function(d,i) {
         // show label for all ordinal values
         if ( type === 'ordinal' ) {
-          return domain[i];
+          var name = domain[i];
+          if ( name === '' ) {
+            name = 'unknown';
+          }
+          return name.length > 9 ? name.substr(0,8) + '..' : name;
         }
         // show only the first and last for others
         else {
