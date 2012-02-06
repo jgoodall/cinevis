@@ -89,8 +89,8 @@ colorlegend = function(target, scale, type, options) {
     for ( var i = 0; i < linearBoxes ; i++  ) {
       colors[i] = scale( i * ((max-min)/linearBoxes) );
     }
+    console.log( min + '/' + max );
   }
-  
   // check the width and height and adjust if necessary to fit in the element
   // use the range if quantile
   if ( fill || w < (boxWidth+boxSpacing)*colors.length + padding[1] + padding[3] ) {
@@ -125,7 +125,7 @@ colorlegend = function(target, scale, type, options) {
       .attr('x', function(d,i) {return i * (boxWidth+boxSpacing) + (boxWidth/2);} )
       .attr('y', boxHeight+2)
       .attr('dy', '.71em')
-      .style('font-size', '10px')
+      .style('font-size', '9px')
       .style('fill', '#666')
       .style('text-anchor', 'middle')
       .style('pointer-events', 'none')

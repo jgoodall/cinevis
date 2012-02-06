@@ -32,15 +32,28 @@ $.each(['Profitability', 'Budget', 'Worldwide Gross', 'Domestic Gross', 'Foreign
 
 // color scales
 var genreColorScale = d3.scale.category20();
-var storyColorScale = d3.scale.category20b(); // TODO - change to use colors in pdf
+
+var storyColorScale = d3.scale.ordinal().range([
+    'rgb(127,85,49)', 'rgb(152,202,150)', 'rgb(72,173,99)', 'rgb(152,202,150)',
+    'rgb(44,169,156)', 'rgb(129,30,86)', 'rgb(76,77,77)', 'rgb(217,39,49)',
+    'rgb(217,206,177)', 'rgb(121,184,86)', 'rgb(193,71,53)', 'rgb(144,45,43)',
+    'rgb(104,50,121)', 'rgb(163,208,196)', 'rgb(97,99,99)', 'rgb(209,159,140)',
+    'rgb(202,204,203)', 'rgb(164,88,139)', 'rgb(174,155,73)', 'rgb(718,25,64)',
+    'rgb(223,74,132)', 'rgb(57,74,136)', 'rgb(240,240,240)', 'rgb(163,208,196)'
+    ]).domain([
+    'discovery', 'love', 'rivalry', 'quest', 'comedy', 'escape', 'metamorphosis',
+    'monster force', 'fish out of water', 'revenge', 'maturation', 'underdog',
+    'sacrifice', 'the riddle', 'wretched excess', 'temptation', 
+    'journey and return', 'pursuit', 'transformation', 'tragedy', 'rescue', 
+    'rags to riches', '']);
 // red - gray - blue [min - avg - max]
 var quantileColorScale = [
-    "rgb(103, 0, 31)", "rgb( 178, 24, 43)", "rgb( 214, 96, 77)", "rgb( 244, 165, 130)", 
-    "rgb( 220, 220, 220)",
-    "rgb( 146, 197, 222)", "rgb( 67, 147, 195)", "rgb( 33, 102, 172)", "rgb( 5, 48, 97)"
+    'rgb(103, 0, 31)', 'rgb( 178, 24, 43)', 'rgb( 214, 96, 77)', 'rgb( 244, 165, 130)', 
+    'rgb( 220, 220, 220)',
+    'rgb( 146, 197, 222)', 'rgb( 67, 147, 195)', 'rgb( 33, 102, 172)', 'rgb( 5, 48, 97)'
       ];
 
-// must set domain of numeric scale: domain([minVal, mean, maxVal])
+// must set domain of numeric scale: domain([minVal, maxVal])
 var numericColorScale = d3.scale.quantile().range(quantileColorScale);
 // default to story for color
 var colorField = 'Story';
@@ -120,7 +133,15 @@ var locate = function(d, axis) {
 // return the color based on the current scale
 // d = the data item to colorize
 var colorize = function(d) {
-  return colorField !== 'None' ? colorScale(d[colorField]) : null;
+  if ( colorField === 'None' ) {
+    return null;
+  }
+  else if ( colorField === 'Story' || colorField === 'Genre' ) {
+    return colorScale(d[colorField].toLowerCase());
+  }
+  else {
+    return colorScale(+d[colorField]);
+  }
 };
 
 // load the data asynchronously
@@ -132,8 +153,8 @@ d3.json('data/moviedata.json', function(json) {
   setupSliders('#wgross-slider', '#wgross-slider-text', intFormat, 'Worldwide Gross', {prepend:'$', append:' M'});
   setupSliders('#dgross-slider', '#dgross-slider-text', intFormat, 'Domestic Gross', {prepend:'$', append:' M'});
   setupSliders('#fgross-slider', '#fgross-slider-text', intFormat, 'Foreign Gross', {prepend:'$', append:' M'});
-  setupSliders('#arating-slider', '#arating-slider-text', intFormat, 'Audience Rating', {min: 0, max: 100});
-  setupSliders('#crating-slider', '#crating-slider-text', intFormat, 'Critic Rating', {min: 0, max: 100});
+  setupSliders('#arating-slider', '#arating-slider-text', intFormat, 'Audience Rating', {min:0, max:100, append:'%'});
+  setupSliders('#crating-slider', '#crating-slider-text', intFormat, 'Critic Rating', {min:0, max:100, append:'%'});
 
   // set controls to be defaults
   $('#xaxis').val(xField);
@@ -153,9 +174,7 @@ d3.json('data/moviedata.json', function(json) {
   range('y', h - axisPadding, 0);
 
   // set up color legend
-  var uniqVals = d3.keys( d3.nest().key( function(d) {return (d[colorField]).toLowerCase();} ).sortKeys().map(data)); // case sensitive!
-  colorScale.domain( uniqVals );
-  colorlegend("#colorpanel", colorScale, "ordinal", {fill: true});
+  colorlegend('#colorpanel', colorScale, 'ordinal', {fill: true});
   
   axisType('x', 'linear');
   xScale = d3.scale.linear()
@@ -278,9 +297,24 @@ function mouseout(d, i) {
 //  prepend, append : add text to prepend or append to label values
 var setupSliders = function(sliderElement, labelElement, labelFormatter, dataField, opts) {
 
-  var minVal = opts && opts.min ? opts.min : d3.round( d3.min(data, function(d) { return $.isNumeric(d[dataField]) ? +d[dataField] : 0; }) );
-  var maxVal = opts && opts.max ? opts.max : d3.round( d3.max(data, function(d) { return $.isNumeric(d[dataField]) ? +d[dataField] : 0; }) );
-
+  var minVal, maxVal;
+  if ( opts && typeof opts.min !== 'undefined' ) {
+    minVal = opts.min;
+  }
+  else {
+    minVal = d3.round( d3.min(data, function(d) { 
+          return $.isNumeric(d[dataField]) ? +d[dataField] : 0; 
+        }) );
+  }
+  if ( opts && typeof opts.max !== 'undefined' ) {
+    maxVal = opts.max;
+  }
+  else{
+    maxVal = d3.round( d3.max(data, function(d) { 
+          return $.isNumeric(d[dataField]) ? +d[dataField] : 0; 
+        }) );
+  }
+  
   // init the sliders
   var sliderOpts = {
     range: true,
@@ -293,7 +327,7 @@ var setupSliders = function(sliderElement, labelElement, labelFormatter, dataFie
   $(sliderElement).on('slide', function( event, ui ) {
     $( labelElement ).val(
       (opts && opts.prepend ? opts.prepend : '') + labelFormatter(ui.values[0]) + (opts && opts.append ? opts.append : '') +
-      " - " +
+      ' - ' +
       (opts && opts.prepend ? opts.prepend : '') + labelFormatter(ui.values[1]) + (opts && opts.append ? opts.append : '')
     );
     filter({field: dataField, min: ui.values[0], max: ui.values[1]});
@@ -305,7 +339,7 @@ var setupSliders = function(sliderElement, labelElement, labelFormatter, dataFie
   // set up the text values for the min and max
   $( labelElement ).val(
     (opts && opts.prepend ? opts.prepend : '') + labelFormatter(minVal) + (opts && opts.append ? opts.append : '') +
-    " - " +
+    ' - ' +
     (opts && opts.prepend ? opts.prepend : '') + labelFormatter(maxVal) + (opts && opts.append ? opts.append : '')
   );
 
@@ -340,6 +374,8 @@ var filter = function(spec) {
           || (d[ allFilters[2].field ] < allFilters[2].min || d[ allFilters[2].field ] > allFilters[2].max)
           || (d[ allFilters[3].field ] < allFilters[3].min || d[ allFilters[3].field ] > allFilters[3].max)
           || (d[ allFilters[4].field ] < allFilters[4].min || d[ allFilters[4].field ] > allFilters[4].max)
+          || (d[ allFilters[5].field ] < allFilters[5].min || d[ allFilters[5].field ] > allFilters[5].max)
+          || (d[ allFilters[6].field ] < allFilters[6].min || d[ allFilters[6].field ] > allFilters[6].max)
           ) {
           d.display = false;
           return this;
@@ -358,6 +394,8 @@ var filter = function(spec) {
           && (d[ allFilters[2].field ] >= allFilters[2].min && d[ allFilters[2].field ] <= allFilters[2].max)
           && (d[ allFilters[3].field ] >= allFilters[3].min && d[ allFilters[3].field ] <= allFilters[3].max)
           && (d[ allFilters[4].field ] >= allFilters[4].min && d[ allFilters[4].field ] <= allFilters[4].max)
+          && (d[ allFilters[5].field ] >= allFilters[5].min && d[ allFilters[5].field ] <= allFilters[5].max)
+          && (d[ allFilters[6].field ] >= allFilters[6].min && d[ allFilters[6].field ] <= allFilters[6].max)
           ) {
           d.display = true;
           return this;
@@ -533,12 +571,10 @@ $( function() {
   $('#color').change(function() {
     colorField = $('#color').val();
     var scaleType;
+    colorScale = null;
     
     if ( colorField === 'Story' ) {
-      var uniqVals = d3.keys( d3.nest().key( function(d) {
-          return (d[colorField]).toLowerCase();
-        } ).sortKeys().map(data));
-      colorScale = storyColorScale.domain( uniqVals );
+      colorScale = storyColorScale;;
       scaleType = 'ordinal';
     }
     else if ( colorField === 'Genre' ) {
@@ -550,9 +586,10 @@ $( function() {
     }
     else {
       colorScale = numericColorScale.domain([
-          d3.min(data, function(d) {return d[colorField];}), 
-          d3.sum(data, function(d) {return d[colorField];}) / data.length, 
-          d3.max(data, function(d) {return d[colorField];})]);
+          d3.min(data, function(d) {return +d[colorField];}), 
+          d3.sum(data, function(d) {return +d[colorField];}) / data.length,
+          d3.max(data, function(d) {return +d[colorField];})
+          ]);
       scaleType = 'quantile';
     }
 
